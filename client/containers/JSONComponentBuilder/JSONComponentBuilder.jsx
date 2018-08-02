@@ -87,7 +87,7 @@ class JSONComponentBuilder extends Component {
 
         if (Element) {
           const children = this.buildChildComponents(item[componentName]);
-          let props = JSON.parse(JSON.stringify(item[componentName]));
+          const props = JSON.parse(JSON.stringify(item[componentName]));
           delete props.children;
 
           if (props.wrapperComponent === true) {
@@ -95,7 +95,7 @@ class JSONComponentBuilder extends Component {
           }
           if (props.isEditable) {
             return (
-              <span className={"unchainedEditableEl"}>
+              <span className="unchainedEditableEl">
                 <Element {...props}>{children}</Element>
                 <button className="editButtonUnchainedEditableEl" onClick={() => this.showPopup(props)}>Edit</button>
               </span>
@@ -116,15 +116,16 @@ class JSONComponentBuilder extends Component {
   }
 
   getRecursiveObject(editableDataPoints, obj = {}) {
+    const newObj = { ...obj };
     Object.keys(editableDataPoints).map(data => {
       if (typeof editableDataPoints[data] === 'object') {
-        this.getRecursiveObject(editableDataPoints[data], obj)
+        this.getRecursiveObject(editableDataPoints[data], newObj);
       }
       if (typeof editableDataPoints[data] === 'string') {
-        obj[data] = editableDataPoints[data];
+        newObj[data] = editableDataPoints[data];
       }
     });
-    return obj;
+    return newObj;
   }
 
   getEditableSettingsContent() {
@@ -135,16 +136,16 @@ class JSONComponentBuilder extends Component {
         return (
           <Table.Row>
             <Table.Cell>{item}</Table.Cell>
-            <Table.Cell>{<Input type="text" value={obj[item]}/>}</Table.Cell>
+            <Table.Cell>{<Input type="text" value={obj[item]} />}</Table.Cell>
           </Table.Row>
-        )
-      })
+        );
+      });
     }
     return null;
   }
 
   hidePopup = () => {
-    this.setState({ showPopup: false, editableDataPoints: null  });
+    this.setState({ showPopup: false, editableDataPoints: null });
   }
 
   render() {
@@ -157,23 +158,23 @@ class JSONComponentBuilder extends Component {
         {this.developComponents(jsonArray)}
         {
           this.state.showPopup ?
-          <Modal open={true} className="unchainedEditableElSettingsPopup">
-            <Modal.Header>
-              Settings
-            </Modal.Header>
-            <Modal.Content>
-              <Table celled striped>
-                <Table.Body>
-                  {this.getEditableSettingsContent()}
-                </Table.Body>
-              </Table>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button className="actionBtns" onClick={this.hidePopup}>Cancel</Button>
-              <Button className="actionBtns" onClick={this.hidePopup} content={'Save'} />
-            </Modal.Actions>
-          </Modal>
-          : null
+            <Modal open={true} className="unchainedEditableElSettingsPopup">
+              <Modal.Header>
+                Settings
+              </Modal.Header>
+              <Modal.Content>
+                <Table celled striped>
+                  <Table.Body>
+                    {this.getEditableSettingsContent()}
+                  </Table.Body>
+                </Table>
+              </Modal.Content>
+              <Modal.Actions>
+                <Button className="actionBtns" onClick={this.hidePopup}>Cancel</Button>
+                <Button className="actionBtns" onClick={this.hidePopup} content={'Save'} />
+              </Modal.Actions>
+            </Modal>
+            : null
         }
       </div>
     );
