@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
+import { isEqual } from 'lodash';
 
 import Message from 'unchained-ui-react/src/components/containers/Message';
 
@@ -14,9 +15,22 @@ class JSONComponentBuilder extends Component {
     jsonArray: PropTypes.array,
   };
 
-  state = {
-    showComponentSpecificPopup: false
-  };
+  constructor(props) {
+    super(props);
+    this.currentConfigData = null;
+    this.state = {
+      showComponentSpecificPopup: false,
+      jsonArray: props.jsonArray,
+    };
+  }
+
+  componentWillReceiveProps(nextProps, props) {
+    if (isEqual(nextProps.jsonArray, props.jsonArray)) {
+      this.setState({
+        jsonArray: nextProps.jsonArray,
+      });
+    }
+  }
 
   buildSEOComponents = (seoObj = {}) => {
     return Object.keys(seoObj).map((k, i) => {
@@ -47,7 +61,7 @@ class JSONComponentBuilder extends Component {
     });
   }
 
-  buildChildComponents(data) {
+  buildChildComponents(data, path) {
     const {
       children: jsonArray
     } = data;
@@ -57,12 +71,13 @@ class JSONComponentBuilder extends Component {
     }
     return (
       <span className="unchainedEditableEl parentEl">
-        {this.developComponents(jsonArray)}
+        {this.developComponents(jsonArray, path)}
         <button
           className="editButtonUnchainedEditableEl"
           onClick={() => {
             this.setState({
               componentRearrangeData: jsonArray,
+              currentPath: path,
             });
           }}
         >
@@ -76,13 +91,14 @@ class JSONComponentBuilder extends Component {
     this.setState({ showComponentSpecificPopup: true, editableDataPoints: props });
   }
 
-  developComponents(jsonArray) {
+  developComponents(jsonArray, currentPath = '') {
     const {
       components,
     } = this.props;
 
     return jsonArray.map((item) => {
       return Object.keys(item).map((componentName) => {
+        const path = `${currentPath}.${componentName}.`;
         if (componentName === 'seo') {
           return (
             <Helmet>
@@ -99,7 +115,7 @@ class JSONComponentBuilder extends Component {
         const Element = components[componentName];
 
         if (Element) {
-          const children = this.buildChildComponents(item[componentName]);
+          const children = this.buildChildComponents(item[componentName], path);
           const props = JSON.parse(JSON.stringify(item[componentName]));
           delete props.children;
 
@@ -110,7 +126,12 @@ class JSONComponentBuilder extends Component {
             return (
               <span className="unchainedEditableEl">
                 <Element {...props}>{children}</Element>
-                <button className="editButtonUnchainedEditableEl" onClick={() => this.showComponentSpecificPopup(props)}>Edit</button>
+                <button
+                  className="editButtonUnchainedEditableEl"
+                  onClick={() => this.showComponentSpecificPopup(props)}
+                >
+                  Edit
+                </button>
               </span>
             );
           }
@@ -135,12 +156,10 @@ class JSONComponentBuilder extends Component {
   render() {
     const {
       jsonArray,
-    } = this.props;
-
-    const {
       componentRearrangeData,
       editableDataPoints,
       showComponentSpecificPopup,
+      currentPath,
     } = this.state;
 
     return (
@@ -155,7 +174,18 @@ class JSONComponentBuilder extends Component {
             : null
         }
         {
-          componentRearrangeData && <ComponentRearrangeModal data={componentRearrangeData} hidePopup={() => this.setState({ componentRearrangeData: null })} />
+          componentRearrangeData &&
+          <ComponentRearrangeModal
+            data={componentRearrangeData}
+            hidePopup={(data) => {
+              const updatedJsonArray = [...jsonArray];
+              updatedJsonArray[currentPath.slice(1, -1)] = data;
+              this.setState({
+                componentRearrangeData: null,
+                jsonArray: updatedJsonArray,
+              });
+            }}
+          />
         }
       </div>
     );

@@ -88,7 +88,7 @@ class ComponentRearrangeModal extends React.Component {
         </Modal.Content>
         <Modal.Actions>
           <Button className="actionBtns" onClick={hidePopup}>Cancel</Button>
-          <Button className="actionBtns" onClick={hidePopup} content={'Save'} />
+          <Button className="actionBtns" onClick={() => hidePopup(componentData)} content={'Save'} />
         </Modal.Actions>
       </Modal>
     );
