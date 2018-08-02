@@ -10,32 +10,26 @@ const PageBuilder = (props) => {
     pathname: slug,
   } = props.location;
 
-  let allPagesData = {};
-  let jsonArray = [];
+  let jsonObj = {};
 
   const previewElement = document.getElementById('unchained');
 
   if (previewElement) {
-    jsonArray = JSON.parse(previewElement.getAttribute('data'));
-  } else if (window.unchainedSite && window.unchainedSite.page) {
-    allPagesData = window.unchainedSite.page;
-
-    if (allPagesData[slug]) {
-      jsonArray = allPagesData[slug];
-    }
-
+    jsonObj = JSON.parse(previewElement.getAttribute('data'));
+  } else if (window.unchainedSite && window.unchainedSite.data.find(d => d.meta.slug === slug)) {
+    jsonObj = window.unchainedSite.data.find(d => d.meta.slug === slug);
     // if (slug === '/en') {
-    //   jsonArray = allPagesData['/en/'];
+    //   jsonObj = allPagesData['/en/'];
     // }
 
-    if (jsonArray.length === 0) {
-      jsonArray = allPagesData['/404/'];
+    if (jsonObj.length === 0) {
+      jsonObj = window.unchainedSite.find(d => d.meta.slug === '/404/');
     }
   }
 
   const components = require('components');
 
-  return <JSONComponentBuilder components={components} jsonArray={jsonArray} />;
+  return <JSONComponentBuilder components={components} jsonObj={jsonObj} />;
 };
 
 PageBuilder.propTypes = {
