@@ -1,0 +1,130 @@
+/*
+ * Component: StickyComponent
+ */
+
+@import '../../../styles/variables';
+
+// (IMPORTANT: please create the styles such that the larger breakpoints
+// override the smaller ones. "Mobile First")
+
+.sticky-component {
+  display: inline;
+  &.fixed {
+    .right-layout {
+      // margin-right: 20px;
+    }
+  }
+}
+
+// Small Breakpoint
+@media (max-width: $screen-sm-min) {
+  .sticky-component {
+    &.fixed {
+      .left-drawer-layout {
+        // ...
+      }
+    }
+  }
+}
+@media (max-width: $screen-sm-min) {
+  .sticky-component {
+    &.fixed {
+      .right-layout {
+        margin-right: 11px;
+      }
+    }
+  }
+}
+@media (min-width: $screen-sm-min) {
+  .sticky-component {
+    &.fixed {
+      .left-drawer-layout {
+        z-index: 100;
+      }
+      &.footer-fixed {
+        .left-drawer-layout {
+          top: auto;
+          bottom: 300px;
+          z-index: 1;
+        }
+      }
+    }
+    &.fixed {
+      .library-filter {
+        @include boxShadow(0px, 2px, 60px, 0, rgba(129, 129, 129, 0.4));
+      }
+      .filter-component {
+        box-shadow: none;
+      }
+      .additional-filter {
+        .accordion {
+          .content {
+            box-shadow: none !important;
+          }
+        }
+      }
+      .left-drawer-layout {
+        position: fixed;
+        max-height: 80vh;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        top: 115px;
+        padding-left: 0px;
+        z-index: 9;
+        width: 250px;
+        margin-top: 0px;
+      }
+      .right-layout {
+        float: right;
+        min-height: 400px;
+      }
+    }
+  }
+}
+
+// Large Breakpoint
+@media (min-width: $screen-lg-min) {
+  .sticky-component {
+    // override md breakpoint styles
+  }
+}
+
+@media (min-width: $screen-xs-sm) and (max-width: $screen-md-min) {
+.sticky-component {
+    &.fixed {
+      .right-layout {
+        margin-right: 30px;
+      }
+      &.footer-fixed {
+        .left-drawer-layout {
+          bottom: 360px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: $screen-md) {
+  .sticky-component {
+    &.fixed {
+      .right-layout {
+        margin-right: 27px;
+      }
+      .right-layout.bookmark-library-wrap {
+        margin: auto;
+      }
+    }
+  }
+}
+
+@media (max-width: $screen-xs-sm) {
+  .sticky-component {
+    &.fixed {
+      .left-drawer-layout {
+        box-shadow: none;
+        left: 20px;
+        position: static;
+      }
+    }
+  }
+}
