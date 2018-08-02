@@ -13,7 +13,8 @@ class BaseComponentEditModal extends Component {
   };
 
   state = {
-    showComponentSpecificPopup: false
+    showComponentSpecificPopup: false,
+    settings: []
   };
 
   getRecursiveObject(editableDataPoints, obj = {}) {
@@ -28,27 +29,41 @@ class BaseComponentEditModal extends Component {
     return obj;
   }
 
+  componentWillMount() {
+    this.setState({ settings: this.getEditableSettingsContent() });
+  }
+
   getEditableSettingsContent() {
     const { editableDataPoints } = this.props;
     if (editableDataPoints) {
       const obj = this.getRecursiveObject(editableDataPoints);
       return Object.keys(obj).map(item => {
-        return (
-          <Table.Row>
-            <Table.Cell>{item}</Table.Cell>
-            <Table.Cell>{<Input type="text" value={obj[item]} />}</Table.Cell>
-          </Table.Row>
-        );
+        return {
+          key: item,
+          value: obj[item]
+        };
       });
     }
-    return null;
+    return [];
   }
 
   hidePopup = () => {
     this.props.cancelCB();
   }
 
+  updateSettingsObj = (el, setting) => {
+    const { settings } = this.state;
+    settings.map(s => {
+      if (s.key === setting.key) {
+        s.value = el.target.value; // eslint-disable-line
+      }
+    });
+    this.setState({ settings });
+  }
+
   render() {
+    const { settings } = this.state;
+
     return (
       <Modal open={true} className="unchainedEditableElSettingsPopup">
         <Modal.Header>
@@ -57,7 +72,22 @@ class BaseComponentEditModal extends Component {
         <Modal.Content>
           <Table celled striped>
             <Table.Body>
-              {this.getEditableSettingsContent()}
+              {
+                settings && settings.map((setting, i) => {
+                  return (
+                    <Table.Row key={`setting-${i + 1}`}>
+                      <Table.Cell>{setting.key}</Table.Cell>
+                      <Table.Cell>
+                        <Input
+                          type="text"
+                          value={setting.value}
+                          onChange={(el) => this.updateSettingsObj(el, setting)}
+                        />
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })
+              }
             </Table.Body>
           </Table>
         </Modal.Content>
