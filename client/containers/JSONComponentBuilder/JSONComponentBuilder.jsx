@@ -136,7 +136,7 @@ class JSONComponentBuilder extends Component {
     const {
       jsonArray,
     } = this.props;
-    
+
     const {
       componentRearrangeData,
       editableDataPoints,

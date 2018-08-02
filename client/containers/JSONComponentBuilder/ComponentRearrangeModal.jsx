@@ -26,20 +26,27 @@ class ComponentRearrangeModal extends React.Component {
 
   updateComponentData = (data, currentLocation, nextLocation, isStartPoint, isEndPoint) => {
     const newComponentData = [...this.state.componentData];
-    if (isStartPoint || isEndPoint) {
+    if (!isStartPoint && !isEndPoint) {
       newComponentData[currentLocation] = newComponentData[nextLocation];
       newComponentData[nextLocation] = data;
     } else if (isStartPoint) {
-      const newData = newComponentData.pop(currentLocation);
-      newComponentData.push(newData);
+      const newData = newComponentData.splice(0, 1);
+      newComponentData.push(newData[0]);
     } else if (isEndPoint) {
-      map(newComponentData, (ele, i) => {
+      map([...newComponentData], (ele, i) => {
         if (i !== currentLocation) {
           newComponentData[i + 1] = ele;
         }
       });
-      newComponentData[currentLocation] = data;
+      newComponentData[0] = data;
     }
+    this.setState({
+      componentData: newComponentData,
+    });
+  }
+  removeComponentDate = (index) => {
+    const newComponentData = [...this.state.componentData];
+    newComponentData.splice(index, 1);
     this.setState({
       componentData: newComponentData,
     });
@@ -51,7 +58,7 @@ class ComponentRearrangeModal extends React.Component {
     return (
       <Modal open className="unchainedEditableElSettingsPopup component-rearrange-modal" size="fullscreen">
         <Modal.Header>
-          Settings
+          Re-Position
         </Modal.Header>
         <Modal.Content>
           <Grid divided>
@@ -65,11 +72,12 @@ class ComponentRearrangeModal extends React.Component {
                   return (
                     <Grid.Column key={Math.random()}>
                       <div className="edit-component">
-                        <Button icon="angle left" onClick={() => this.updateComponentData(componentData[i], i, prevLocation, isStartPoint, isEndPoint)} />
+                        <Button icon="angle left" onClick={() => this.updateComponentData(componentData[i], i, prevLocation, isStartPoint, false)} />
                         <div>
                           {i + 1} {componentData[i][name].altText}
+                          <Button className="trash-icon" icon="trash" onClick={() => this.removeComponentDate(i)} />
                         </div>
-                        <Button icon="angle right" onClick={() => this.updateComponentData(componentData[i], i, nextLocation, isStartPoint, isEndPoint)} />
+                        <Button icon="angle right" onClick={() => this.updateComponentData(componentData[i], i, nextLocation, false, isEndPoint)} />
                       </div>
                     </Grid.Column>
                   );
