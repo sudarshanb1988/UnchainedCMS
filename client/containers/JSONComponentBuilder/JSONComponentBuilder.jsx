@@ -12,7 +12,7 @@ import ComponentRearrangeModal from './ComponentRearrangeModal';
 class JSONComponentBuilder extends Component {
   static propTypes = {
     components: PropTypes.object,
-    jsonArray: PropTypes.array,
+    jsonObj: PropTypes.object,
   };
 
   constructor(props) {
@@ -46,14 +46,14 @@ class JSONComponentBuilder extends Component {
       let tag = null;
 
       switch (key) {
-        case 'title':
+        case 'seo_title':
           tag = <title key={Math.random()}>{value}</title>;
           break;
-        case 'searchdescription':
+        case 'search_description':
           tag = <meta key={Math.random()} name={'description'} content={value} />;
           break;
         default:
-          tag = <meta key={Math.random()} name={key} content={value} />;
+          // tag = <meta key={Math.random()} name={key} content={value} />;
           break;
       }
 
@@ -61,11 +61,7 @@ class JSONComponentBuilder extends Component {
     });
   }
 
-  buildChildComponents(data, path) {
-    const {
-      children: jsonArray
-    } = data;
-
+  buildChildComponents(jsonArray) {
     if (!jsonArray || jsonArray.length === 0) {
       return null;
     }
@@ -97,55 +93,35 @@ class JSONComponentBuilder extends Component {
     } = this.props;
 
     return jsonArray.map((item) => {
-      return Object.keys(item).map((componentName) => {
-        const path = `${currentPath}.${componentName}.`;
-        if (componentName === 'seo') {
+      const componentName = item.type;
+      const Element = components[componentName];
+
+      if (Element) {
+        const children = this.buildChildComponents(item.value.children);
+        const props = JSON.parse(JSON.stringify(item.value));
+        delete props.children;
+
+        if (props.wrapperComponent === true) {
+          return children;
+        }
+        if (props.isEditable) {
           return (
-            <Helmet>
-              {this.buildSEOComponents(item[componentName])}
-            </Helmet>
+            <span className="unchainedEditableEl">
+              <Element {...props}>{children}</Element>
+              <button className="editButtonUnchainedEditableEl" onClick={() => this.showComponentSpecificPopup(props)}>Edit</button>
+            </span>
           );
-        } else if (componentName === 'page_parameters') {
-          window.pageGlobalParams = {
-            ...(item[componentName])
-          };
-          return null;
         }
+        return <Element {...props}>{children}</Element>;
+      }
 
-        const Element = components[componentName];
-
-        if (Element) {
-          const children = this.buildChildComponents(item[componentName], path);
-          const props = JSON.parse(JSON.stringify(item[componentName]));
-          delete props.children;
-
-          if (props.wrapperComponent === true) {
-            return children;
-          }
-          if (props.isEditable) {
-            return (
-              <span className="unchainedEditableEl">
-                <Element {...props}>{children}</Element>
-                <button
-                  className="editButtonUnchainedEditableEl"
-                  onClick={() => this.showComponentSpecificPopup(props)}
-                >
-                  Edit
-                </button>
-              </span>
-            );
-          }
-          return <Element {...props}>{children}</Element>;
-        }
-
-        return (
-          <Message
-            warning
-            header={'Component work in Progress'}
-            content={`We are working hard at building ${componentName} component`}
-          />
-        );
-      });
+      return (
+        <Message
+          warning
+          header={'Component work in Progress'}
+          content={`We are working hard at building ${componentName} component`}
+        />
+      );
     });
   }
 
@@ -155,16 +131,20 @@ class JSONComponentBuilder extends Component {
 
   render() {
     const {
-      jsonArray,
-      componentRearrangeData,
-      editableDataPoints,
+      jsonObj,
+    } = this.props;
+
+    const {
       showComponentSpecificPopup,
       currentPath,
     } = this.state;
 
     return (
       <div>
-        {this.developComponents(jsonArray)}
+        <Helmet>
+          {this.buildSEOComponents(jsonObj.meta)}
+        </Helmet>
+        {this.developComponents(jsonObj.body)}
         {
           showComponentSpecificPopup ?
             <BaseComponentEditModal
