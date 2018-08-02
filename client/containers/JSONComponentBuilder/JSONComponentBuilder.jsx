@@ -15,7 +15,7 @@ class JSONComponentBuilder extends Component {
   };
 
   state = {
-    showPopup: false
+    showComponentSpecificPopup: false
   };
 
   buildSEOComponents = (seoObj = {}) => {
@@ -55,12 +55,16 @@ class JSONComponentBuilder extends Component {
     if (!jsonArray || jsonArray.length === 0) {
       return null;
     }
-
-    return this.developComponents(jsonArray);
+    return (
+      <span className="unchainedEditableEl parentEl">
+        {this.developComponents(jsonArray)}
+        <button className="editButtonUnchainedEditableEl" onClick={() => {}}>Edit</button>
+      </span>
+    );
   }
 
-  showPopup = (props) => {
-    this.setState({ showPopup: true, editableDataPoints: props });
+  showComponentSpecificPopup = (props) => {
+    this.setState({ showComponentSpecificPopup: true, editableDataPoints: props });
   }
 
   developComponents(jsonArray) {
@@ -97,7 +101,7 @@ class JSONComponentBuilder extends Component {
             return (
               <span className="unchainedEditableEl">
                 <Element {...props}>{children}</Element>
-                <button className="editButtonUnchainedEditableEl" onClick={() => this.showPopup(props)}>Edit</button>
+                <button className="editButtonUnchainedEditableEl" onClick={() => this.showComponentSpecificPopup(props)}>Edit</button>
               </span>
             );
           }
@@ -144,7 +148,7 @@ class JSONComponentBuilder extends Component {
   }
 
   hidePopup = () => {
-    this.setState({ showPopup: false, editableDataPoints: null });
+    this.setState({ showComponentSpecificPopup: false, editableDataPoints: null });
   }
 
   render() {
@@ -156,7 +160,7 @@ class JSONComponentBuilder extends Component {
       <div>
         {this.developComponents(jsonArray)}
         {
-          this.state.showPopup ?
+          this.state.showComponentSpecificPopup ?
             <Modal open={true} className="unchainedEditableElSettingsPopup">
               <Modal.Header>
                 Settings

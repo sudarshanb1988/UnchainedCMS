@@ -19,6 +19,15 @@
     border: none;
     outline: none;
   }
+  &.parentEl {
+    display: block;
+    border: solid 1px #ccc;
+    padding: 20px;
+    .editButtonUnchainedEditableEl {
+      top: 0;
+      right: 0;
+    }
+  }
 }
 .unchainedEditableElSettingsPopup {
   .ui.input {
