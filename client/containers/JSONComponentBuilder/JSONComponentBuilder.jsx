@@ -8,6 +8,8 @@ import Table from 'unchained-ui-react/src/components/containers/Table';
 import Input from 'unchained-ui-react/src/components/controls/Input';
 import Button from 'unchained-ui-react/src/components/controls/Button';
 
+import ComponentRearrangeModal from './ComponentRearrangeModal';
+
 class JSONComponentBuilder extends Component {
   static propTypes = {
     components: PropTypes.object,
@@ -58,7 +60,16 @@ class JSONComponentBuilder extends Component {
     return (
       <span className="unchainedEditableEl parentEl">
         {this.developComponents(jsonArray)}
-        <button className="editButtonUnchainedEditableEl" onClick={() => {}}>Edit</button>
+        <button
+          className="editButtonUnchainedEditableEl"
+          onClick={() => {
+            this.setState({
+              componentRearrangeData: jsonArray,
+            });
+          }}
+        >
+          Edit
+        </button>
       </span>
     );
   }
@@ -156,12 +167,15 @@ class JSONComponentBuilder extends Component {
     const {
       jsonArray,
     } = this.props;
-
+    const {
+      showComponentSpecificPopup,
+      componentRearrangeData,
+    } = this.state;
     return (
       <div>
         {this.developComponents(jsonArray)}
         {
-          this.state.showComponentSpecificPopup ?
+          showComponentSpecificPopup ?
             <Modal open={true} className="unchainedEditableElSettingsPopup">
               <Modal.Header>
                 Settings
@@ -179,6 +193,9 @@ class JSONComponentBuilder extends Component {
               </Modal.Actions>
             </Modal>
             : null
+        }
+        {
+          componentRearrangeData && <ComponentRearrangeModal data={componentRearrangeData} hidePopup={() => this.setState({ componentRearrangeData: null })} />
         }
       </div>
     );
