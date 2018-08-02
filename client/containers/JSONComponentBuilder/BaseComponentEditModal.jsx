@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { isEqual } from 'lodash';
 
 import Modal from 'unchained-ui-react/src/components/containers/Modal';
 import Table from 'unchained-ui-react/src/components/containers/Table';
@@ -9,13 +10,20 @@ import Button from 'unchained-ui-react/src/components/controls/Button';
 class BaseComponentEditModal extends Component {
   static propTypes = {
     cancelCB: PropTypes.func,
-    editableDataPoints: PropTypes.object,
   };
 
   state = {
     showComponentSpecificPopup: false,
-    settings: []
+    settings: [],
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(getEditableSettingsContent(nextProps), this.state.settings)) {
+      this.setState({
+        settings: this.getEditableSettingsContent(nextProps),
+      });
+    }
+  }
 
   getRecursiveObject(editableDataPoints, obj = {}) {
     Object.keys(editableDataPoints).map(data => {
@@ -30,11 +38,11 @@ class BaseComponentEditModal extends Component {
   }
 
   componentWillMount() {
-    this.setState({ settings: this.getEditableSettingsContent() });
+    this.setState({ settings: this.getEditableSettingsContent(this.props) });
   }
 
-  getEditableSettingsContent() {
-    const { editableDataPoints } = this.props;
+  getEditableSettingsContent(props) {
+    const { editableDataPoints } = props;
     if (editableDataPoints) {
       const obj = this.getRecursiveObject(editableDataPoints);
       return Object.keys(obj).map(item => {
@@ -48,7 +56,11 @@ class BaseComponentEditModal extends Component {
   }
 
   hidePopup = () => {
-    this.props.cancelCB();
+    const data = {};
+    this.state.settings.map((ele) => {
+      data[ele.key] = ele.value;
+    });
+    this.props.cancelCB(data);
   }
 
   updateSettingsObj = (el, setting) => {

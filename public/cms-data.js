@@ -16,11 +16,12 @@ window.unchainedSite = {
             navLinkAltText: 'Navigation link',
             image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/F818811F-2C8E-4546-BF48-CE5E75DF7214.png',
             hoverNavImageAltText: 'Navigation link hover',
-            navImage: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/Chevron_Heavier2x.png'
-
+            navImage: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/Chevron_Heavier2x.png',
+            parentId: 'aa19ec52-514d-4960-9788-ea2a2969bdcc'
           },
           type: 'FeaturedResearchComponent',
-          id: 'aa19ec52-514d-4960-9788-ea2a2969bdcc'
+          id: 'aa19ec52-514d-4960-9788-ea2a2969bdcc',
+          parentId: '29563228-09dc-4dc8-8e05-11757eb5c23f'
         },
         {
           value: {
@@ -37,10 +38,12 @@ window.unchainedSite = {
             navLinkAltText: 'Navigation link',
             image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/1995B7E8-7CF8-4297-B5F0-DED7CBB5AE05.png',
             hoverNavImageAltText: 'Navigation link hover',
-            navImage: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/Chevron_Heavier2x.png'
+            navImage: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/Chevron_Heavier2x.png',
+            parentId: '18f143f8-e566-4247-b231-33557d1f4e56'
           },
           type: 'FeaturedResearchComponent',
-          id: '18f143f8-e566-4247-b231-33557d1f4e56'
+          id: '18f143f8-e566-4247-b231-33557d1f4e56',
+          parentId: '29563228-09dc-4dc8-8e05-11757eb5c23f'
         },
         {
           value: {
@@ -57,10 +60,12 @@ window.unchainedSite = {
             navLinkAltText: 'Navigation link',
             image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/F1426582-F184-4A62-8EDB-41E2192FAC1F_1.png',
             hoverNavImageAltText: 'Navigation link hover',
-            navImage: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/Chevron_Heavier2x.png'
+            navImage: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/Chevron_Heavier2x.png',
+            parentId: 'e8294d0e-05d3-407f-ad90-2dcc2c2c8afd'
           },
           type: 'FeaturedResearchComponent',
-          id: 'e8294d0e-05d3-407f-ad90-2dcc2c2c8afd'
+          id: 'e8294d0e-05d3-407f-ad90-2dcc2c2c8afd',
+          parentId: '29563228-09dc-4dc8-8e05-11757eb5c23f'
         },
         {
           value: {
@@ -76,11 +81,13 @@ window.unchainedSite = {
             navLinkAltText: 'Navigation link',
             image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/7219CCDE-0AD0-4089-A459-A7143A0DB226.png',
             hoverNavImageAltText: 'Navigation link hover',
-            navImage: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/Chevron_Heavier2x.png'
+            navImage: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/Chevron_Heavier2x.png',
+            parentId: '8b5f9e79-6ffb-4ff3-a838-b773ff47c334'
 
           },
           type: 'FeaturedResearchComponent',
-          id: '8b5f9e79-6ffb-4ff3-a838-b773ff47c334'
+          id: '8b5f9e79-6ffb-4ff3-a838-b773ff47c334',
+          parentId: '29563228-09dc-4dc8-8e05-11757eb5c23f'
         }
         ],
         className: ''
@@ -99,11 +106,12 @@ window.unchainedSite = {
               url: '/library/'
             },
             altText: 'energy',
-            image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/1.png'
-
+            image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/1.png',
+            parentId: '2d5f4866-3b20-4a08-ae83-64a584ddb454'
           },
           type: 'GICIcon',
-          id: '2d5f4866-3b20-4a08-ae83-64a584ddb454'
+          id: '2d5f4866-3b20-4a08-ae83-64a584ddb454',
+          parentId: 'a5898086-c62a-4fae-bbd8-8779760da4d6'
         },
         {
           value: {
@@ -114,11 +122,13 @@ window.unchainedSite = {
               url: '/library/'
             },
             altText: 'Materials',
-            image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/2.png'
+            image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/2.png',
+            parentId: '06a83ff9-b0ea-46ca-9b7b-70a39d88577d'
 
           },
           type: 'GICIcon',
-          id: '06a83ff9-b0ea-46ca-9b7b-70a39d88577d'
+          id: '06a83ff9-b0ea-46ca-9b7b-70a39d88577d',
+          parentId: 'a5898086-c62a-4fae-bbd8-8779760da4d6'
         },
         {
           value: {
@@ -130,11 +140,13 @@ window.unchainedSite = {
             },
             isEditable: true,
             altText: 'Industrials',
-            image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/3.png'
+            image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/3.png',
+            parentId: 'cab8caf3-0eb9-4652-85ac-a79ee9819d1f'
 
           },
           type: 'GICIcon',
-          id: 'cab8caf3-0eb9-4652-85ac-a79ee9819d1f'
+          id: 'cab8caf3-0eb9-4652-85ac-a79ee9819d1f',
+          parentId: 'a5898086-c62a-4fae-bbd8-8779760da4d6'
         },
         {
           value: {
@@ -145,11 +157,12 @@ window.unchainedSite = {
               url: '/library/'
             },
             altText: 'Consumer Discretionary',
-            image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/4.png'
-
+            image: 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/4.png',
+            parentId: 'd394f09b-57b0-4843-87f2-727aa7c0d895'
           },
           type: 'GICIcon',
-          id: 'd394f09b-57b0-4843-87f2-727aa7c0d895'
+          id: 'd394f09b-57b0-4843-87f2-727aa7c0d895',
+          parentId: 'a5898086-c62a-4fae-bbd8-8779760da4d6'
         }
         ],
         className: '',
