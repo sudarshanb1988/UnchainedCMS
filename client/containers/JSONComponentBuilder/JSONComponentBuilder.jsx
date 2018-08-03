@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
+import { isEqual } from 'lodash';
 
 import Message from 'unchained-ui-react/src/components/containers/Message';
 
 import BaseComponentEditModal from './BaseComponentEditModal';
+
+import ComponentRearrangeModal from './ComponentRearrangeModal';
 
 class JSONComponentBuilder extends Component {
   static propTypes = {
@@ -12,9 +15,22 @@ class JSONComponentBuilder extends Component {
     jsonObj: PropTypes.object,
   };
 
-  state = {
-    showComponentSpecificPopup: false
-  };
+  constructor(props) {
+    super(props);
+    this.currentConfigData = null;
+    this.state = {
+      showComponentSpecificPopup: false,
+      jsonObj: props.jsonObj,
+    };
+  }
+
+  componentWillReceiveProps(nextProps, props) {
+    if (isEqual(nextProps.jsonObj, props.jsonObj)) {
+      this.setState({
+        jsonObj: nextProps.jsonObj,
+      });
+    }
+  }
 
   buildSEOComponents = (seoObj = {}) => {
     return Object.keys(seoObj).map((k, i) => {
@@ -45,14 +61,23 @@ class JSONComponentBuilder extends Component {
     });
   }
 
-  buildChildComponents(jsonArray) {
-    if (!jsonArray || jsonArray.length === 0) {
+  buildChildComponents(jsonObj) {
+    if (!jsonObj || jsonObj.length === 0) {
       return null;
     }
     return (
       <span className="unchainedEditableEl parentEl">
-        {this.developComponents(jsonArray)}
-        <button className="editButtonUnchainedEditableEl" onClick={() => {}}>Edit</button>
+        {this.developComponents(jsonObj)}
+        <button
+          className="editButtonUnchainedEditableEl"
+          onClick={() => {
+            this.setState({
+              componentRearrangeData: jsonObj,
+            });
+          }}
+        >
+          Edit
+        </button>
       </span>
     );
   }
@@ -61,12 +86,12 @@ class JSONComponentBuilder extends Component {
     this.setState({ showComponentSpecificPopup: true, editableDataPoints: props });
   }
 
-  developComponents(jsonArray) {
+  developComponents(jsonObj) {
     const {
       components,
     } = this.props;
 
-    return jsonArray.map((item) => {
+    return jsonObj.map((item) => {
       const componentName = item.type;
       const Element = components[componentName];
 
@@ -105,12 +130,11 @@ class JSONComponentBuilder extends Component {
 
   render() {
     const {
-      jsonObj,
-    } = this.props;
-
-    const {
       showComponentSpecificPopup,
-      editableDataPoints
+      componentRearrangeData,
+      componentType,
+      editableDataPoints,
+      jsonObj,
     } = this.state;
 
     return (
@@ -123,9 +147,61 @@ class JSONComponentBuilder extends Component {
           showComponentSpecificPopup ?
             <BaseComponentEditModal
               editableDataPoints={editableDataPoints}
-              cancelCB={this.hidePopup}
+              cancelCB={(data) => {
+                let updatedjsonObj = { ...jsonObj };
+                if (data) {
+                  updatedjsonObj = jsonObj.body.map(fir => {
+                    const firChildren = fir.value.children.map((sec) => {
+                      const newSec = { ...sec };
+                      const rightSec = sec.id === editableDataPoints.parentId;
+                      if (rightSec) {
+                        newSec.value = {
+                          ...newSec.value,
+                          ...data,
+                        };
+                      }
+                      return newSec;
+                    });
+                    return {
+                      ...fir,
+                      value: {
+                        ...fir.value,
+                        children: firChildren,
+                      },
+                    };
+                  });
+                }
+                this.hidePopup();
+                this.setState({
+                  jsonObj: {
+                    ...jsonObj,
+                    body: updatedjsonObj,
+                  }
+                });
+              }}
             />
             : null
+        }
+        {
+          componentRearrangeData &&
+          <ComponentRearrangeModal
+            data={componentRearrangeData}
+            type={componentType}
+            hidePopup={(data) => {
+              const updatedjsonObj = { ...jsonObj };
+              if (data) {
+                const changedData = jsonObj.body.find((e) => (e.id === data[0].parentId));
+                const changedDataLocation = changedData && jsonObj.body.indexOf(changedData);
+                if (changedDataLocation >= 0) {
+                  updatedjsonObj.body[changedDataLocation].value.children = data;
+                }
+              }
+              this.setState({
+                componentRearrangeData: null,
+                jsonObj: updatedjsonObj,
+              });
+            }}
+          />
         }
       </div>
     );
