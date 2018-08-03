@@ -158,6 +158,10 @@ class JSONComponentBuilder extends Component {
                         newSec.value = {
                           ...newSec.value,
                           ...data,
+                          to: {
+                            ...newSec.value.to,
+                            url: data.url,
+                          }
                         };
                       }
                       return newSec;
