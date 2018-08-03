@@ -1,0 +1,22 @@
+<html>
+  <body>
+
+
+  </body>
+  <script type="text/javascript">
+    const numItemsToGenerate = 1000; //how many gallery items you want on the screen
+    const imageWidth = 2550; //your desired image width in pixels
+    const imageHeight = 3300; //desired image height in pixels
+    const collectionID = 1163637; //the collection ID from the original url
+    function renderGalleryItem(id){
+      let galleryItem = document.createElement('div');
+      galleryItem.classList.add('gallery-item');
+      let randomImageIndex = Math.floor(Math.random() * numItemsToGenerate);
+      galleryItem.innerHTML = "<img style='max-width: 100%' src="+'https://source.unsplash.com/collection/'+collectionID+'/'+imageWidth+'x'+imageHeight+'/'+"/?sig="+randomImageIndex+">";
+      document.body.appendChild(galleryItem);
+    }
+    for(let i=0;i<numItemsToGenerate;i++){
+      renderGalleryItem();
+    }
+  </script>
+</html>
