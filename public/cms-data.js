@@ -93,6 +93,7 @@ window.unchainedSite = {
         className: ''
       },
       type: 'FeaturedResearch',
+      isEditable: true,
       id: '29563228-09dc-4dc8-8e05-11757eb5c23f'
     },
     {
@@ -171,6 +172,7 @@ window.unchainedSite = {
           link_target: 'sameTab',
           url: '/library/'
         },
+        isEditable: true,
         richText: '<div class="rich-text"><h1 style="text-align: center;">About BMO Research</h1><p style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.<br/></p></div>',
         buttonText: ''
       },

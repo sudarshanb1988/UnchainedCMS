@@ -66,19 +66,21 @@ class JSONComponentBuilder extends Component {
       return null;
     }
     return (
-      <span className="unchainedEditableEl parentEl">
+      <div className="unchainedEditableEl parentEl">
         {this.developComponents(jsonObj)}
-        <button
-          className="editButtonUnchainedEditableEl"
-          onClick={() => {
-            this.setState({
-              componentRearrangeData: jsonObj,
-            });
-          }}
-        >
-          Edit
-        </button>
-      </span>
+        <div className="unchainedEditableBtn">
+          <button
+            className="editButtonUnchainedEditableEl"
+            onClick={() => {
+              this.setState({
+                componentRearrangeData: jsonObj,
+              });
+            }}
+          >
+            Edit
+          </button>
+        </div>
+      </div>
     );
   }
 
@@ -105,10 +107,12 @@ class JSONComponentBuilder extends Component {
         }
         if (props.isEditable) {
           return (
-            <span className="unchainedEditableEl">
+            <div className="unchainedEditableEl">
+              <div className="unchainedEditableBtn">
+                <button className="editButtonUnchainedEditableEl" onClick={() => this.showComponentSpecificPopup(props)}>Edit</button>
+              </div>
               <Element {...props}>{children}</Element>
-              <button className="editButtonUnchainedEditableEl" onClick={() => this.showComponentSpecificPopup(props)}>Edit</button>
-            </span>
+            </div>
           );
         }
         return <Element {...props}>{children}</Element>;
