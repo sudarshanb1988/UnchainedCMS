@@ -5,8 +5,12 @@ import { isEqual } from 'lodash';
 
 import Message from 'unchained-ui-react/src/components/containers/Message';
 
-import BaseComponentEditModal from './BaseComponentEditModal';
+import {
+  updateCMDData,
+} from 'api/auth';
 
+
+import BaseComponentEditModal from './BaseComponentEditModal';
 import ComponentRearrangeModal from './ComponentRearrangeModal';
 
 class JSONComponentBuilder extends Component {
@@ -131,7 +135,44 @@ class JSONComponentBuilder extends Component {
   hidePopup = () => {
     this.setState({ showComponentSpecificPopup: false, editableDataPoints: null });
   }
-
+  updateCMDData = async (data) => {
+    let updatedjsonObj = { ...jsonObj };
+    if (data) {
+      updatedjsonObj = jsonObj.body.map(fir => {
+        const firChildren = fir.value.children.map((sec) => {
+          const newSec = { ...sec };
+          const rightSec = sec.id === editableDataPoints.parentId;
+          if (rightSec) {
+            newSec.value = {
+              ...newSec.value,
+              ...data,
+              to: {
+                ...newSec.value.to,
+                url: data.url,
+              }
+            };
+          }
+          return newSec;
+        });
+        return {
+          ...fir,
+          value: {
+            ...fir.value,
+            children: firChildren,
+          },
+        };
+      });
+    }
+    this.hidePopup();
+    const res = await updateCMDData({
+      ...jsonObj,
+      body: updatedjsonObj,
+    });
+    this.setState({
+      jsonObj: res,
+    });
+    window.unchainedSite = res;
+  }
   render() {
     const {
       showComponentSpecificPopup,
@@ -151,42 +192,7 @@ class JSONComponentBuilder extends Component {
           showComponentSpecificPopup ?
             <BaseComponentEditModal
               editableDataPoints={editableDataPoints}
-              cancelCB={(data) => {
-                let updatedjsonObj = { ...jsonObj };
-                if (data) {
-                  updatedjsonObj = jsonObj.body.map(fir => {
-                    const firChildren = fir.value.children.map((sec) => {
-                      const newSec = { ...sec };
-                      const rightSec = sec.id === editableDataPoints.parentId;
-                      if (rightSec) {
-                        newSec.value = {
-                          ...newSec.value,
-                          ...data,
-                          to: {
-                            ...newSec.value.to,
-                            url: data.url,
-                          }
-                        };
-                      }
-                      return newSec;
-                    });
-                    return {
-                      ...fir,
-                      value: {
-                        ...fir.value,
-                        children: firChildren,
-                      },
-                    };
-                  });
-                }
-                this.hidePopup();
-                this.setState({
-                  jsonObj: {
-                    ...jsonObj,
-                    body: updatedjsonObj,
-                  }
-                });
-              }}
+              cancelCB={this.updateCMDData}
             />
             : null
         }
