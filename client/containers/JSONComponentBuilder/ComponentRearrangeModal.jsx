@@ -2,12 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { map } from 'lodash';
+import classNames from 'classnames';
 
 import {
   Grid,
   Modal,
   Button,
 } from 'unchained-ui-react';
+
 
 import './ComponentRearrangeModal.scss';
 
@@ -65,19 +67,38 @@ class ComponentRearrangeModal extends React.Component {
             <Grid.Row columns={4}>
               {
                 map(componentData, (ele, i) => {
-                  const nextLocation = (i === dataLength - 1) ? 0 : i + 1;
-                  const prevLocation = (i === 0) ? dataLength : i - 1;
-                  const isEndPoint = (i === dataLength - 1);
-                  const isStartPoint = i === 0;
                   return (
                     <Grid.Column key={Math.random()}>
-                      <div className="edit-component">
-                        <Button icon="angle left" onClick={() => this.updateComponentData(componentData[i], i, prevLocation, isStartPoint, false)} />
+                      <div
+                        className={classNames('edit-component', { hovered : ele.id === this.state.hoverDivId })}
+                        id={`editComponent${i}`}
+                        onDragStart={(ev) => {
+                          ev.dataTransfer.setData('string', JSON.stringify(ele));
+                        }}
+                        onDrop={(ev) => {
+                          ev.preventDefault();
+                          const data = JSON.parse(ev.dataTransfer.getData('string'));
+                          const newComponetData = [...componentData];
+                          const dataLocation = componentData.indexOf(componentData.find((e) => e.id === data.id));
+                          const eleLocation = componentData.indexOf(componentData.find((e) => e.id === ele.id));
+                          newComponetData[dataLocation] = ele;
+                          newComponetData[eleLocation] = data;
+                          this.setState({
+                            componentData: newComponetData,
+                          });
+                        }}
+                        onDragOver={(ev) => {
+                          ev.preventDefault();
+                          this.setState({
+                            hoverDivId: ele.id,
+                          })
+                        }}
+                        draggable
+                      >
                         <div>
                           {i + 1} {ele.value.altText}
                           <Button className="trash-icon" icon="trash" onClick={() => this.removeComponentDate(i)} />
                         </div>
-                        <Button icon="angle right" onClick={() => this.updateComponentData(componentData[i], i, nextLocation, false, isEndPoint)} />
                       </div>
                     </Grid.Column>
                   );
