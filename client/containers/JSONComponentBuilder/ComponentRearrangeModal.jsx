@@ -105,12 +105,21 @@ export default DragDropContext(HTML5Backend)(ComponentRearrangeModal);
 
 class DragAndDrop extends React.Component { // eslint-disable-line
   render() {
-    const { connectDragSource, connectDropTarget, children, isDragging } = this.props; // eslint-disable-line
+    const { connectDragSource, connectDropTarget, children, isOver } = this.props; // eslint-disable-line
     return (
       <div>
         {
           connectDragSource(connectDropTarget(
-            <div className={classNames({ dragging: isDragging })}>
+            <div
+              className={
+                classNames(
+                  'edit-component',
+                  {
+                    hover: isOver,
+                  }
+                )
+              }
+            >
               {children}
             </div>
           ))
@@ -125,14 +134,10 @@ const DragAndDropComponent = flow(
     'DragAndDrop',
     {
       beginDrag(props) {
-        console.log(props); // eslint-disable-line
         return {
           ...props,
         };
       },
-      endDrag(props) {
-        console.log(props); // eslint-disable-line
-      }
     },
     (connect, monitor) => {
       return {
@@ -149,6 +154,12 @@ const DragAndDropComponent = flow(
         const prevProps = monitor.getItem();
         targetProps.onDropComponent(prevProps.data);
         return targetProps;
+      },
+      hover(props) {
+        return {
+          ...props,
+          isHover: true,
+        };
       }
     },
     (connect, monitor) => ({
