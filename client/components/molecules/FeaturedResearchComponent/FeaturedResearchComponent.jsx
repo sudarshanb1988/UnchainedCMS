@@ -23,13 +23,7 @@ import './FeaturedResearchComponent.scss';
 
 class FeaturedResearchComponent extends Component {
   props: {
-    altText: '',
-    image: '',
-    sectionDescription: '',
-    sectionTitle: '',
-    to: '',
-    navLinkAltText: '',
-    navImage: '',
+    data: [],
   };
 
   state = {
@@ -56,16 +50,19 @@ class FeaturedResearchComponent extends Component {
   }
 
   render() {
-    const { altText, image, sectionDescription, sectionTitle, to, navImage, navLinkAltText } = this.props;
+    const { data } = this.props;
+    const sectionTitle = data[0].value.text;
+    const to = {};
+
     const markup = (
       <Segment textAlign="center" basic>
         <List className="list-wrap">
           <List.Item className="title section-title"><span>{this.getFormattedText(sectionTitle)}</span></List.Item>
           <List.Item className="component-image-holder">
-            <Image className="component-image" height={72} src={image} alt={altText} title={altText} />
+            <Image className="component-image" height={72} src={data[2].value.image} alt={data[2].value.altText} title={data[2].value.altText} />
           </List.Item>
-          <List.Item className="description"><RichText richText={sectionDescription} /></List.Item>
-          <Image className="link-imag" width={42} src={navImage} alt={`${navLinkAltText} to ${sectionTitle}`} title={`${navLinkAltText} to ${sectionTitle}`} />
+          <List.Item className="description"><RichText richText={data[1].value.richText} /></List.Item>
+          <Image className="link-imag" width={42} src={data[3].value.image} alt={`${data[3].value.altText} to ${sectionTitle}`} title={`${data[3].value.altText} to ${sectionTitle}`} />
         </List>
       </Segment>
     );

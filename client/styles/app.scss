@@ -8,6 +8,7 @@
 @import "bmo_dropdown";
 @import "bmo_textbox";
 @import "node_modules/react-image-gallery/styles/scss/image-gallery.scss";
+@import '~react-quill/dist/quill.snow.css';
 
 
 .unchainedEditableEl {
@@ -29,6 +30,27 @@
     background: transparent;
     border: none;
     outline: none;
+  }
+}
+.unchainedEditableElSettingsPopup {
+  .setting-control {
+    margin: 50px 20px;
+    .ui.input {
+      width: 100%;
+      input {
+        background-color: transparent;
+        border: solid 1px #ccc;
+      }
+    }
+    .ui.button.editBtn{
+      background: none;
+      padding: 0;
+      .edit.icon {
+        font-size: 24px;
+        margin-top: 20px;
+        text-align: center;
+      }
+    }
   }
   /*
   &.parentEl {

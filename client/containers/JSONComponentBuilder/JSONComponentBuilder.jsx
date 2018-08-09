@@ -28,6 +28,8 @@ class JSONComponentBuilder extends Component {
     };
   }
 
+  unchainedControlPrefix = 'UnchainedCtrl';
+
   componentWillReceiveProps(nextProps, props) {
     if (isEqual(nextProps.jsonObj, props.jsonObj)) {
       this.setState({
@@ -65,28 +67,36 @@ class JSONComponentBuilder extends Component {
     });
   }
 
-  buildChildComponents(jsonObj) {
-    if (!jsonObj || jsonObj.length === 0) {
+  isUnchainedCtrl = (arr) => {
+    const a = arr.find(i => i.type.indexOf(this.unchainedControlPrefix) > -1) || [];
+    return (a.length === arr.length);
+  }
+
+  buildChildComponents(jsonObj, isEditable) {
+    if (!jsonObj || jsonObj.length === 0 || this.isUnchainedCtrl(jsonObj)) {
       return null;
     }
-    return (
-      <div className="unchainedEditableEl parentEl">
-        {this.developComponents(jsonObj)}
-        <div className="unchainedEditableBtn">
-          <Button
-            icon
-            className="editButtonUnchainedEditableEl"
-            onClick={() => {
-              this.setState({
-                componentRearrangeData: jsonObj,
-              });
-            }}
-          >
-            <Icon name="setting" />
-          </Button>
+    if (isEditable) {
+      return (
+        <div className="unchainedEditableEl parentEl">
+          {this.developComponents(jsonObj)}
+          <div className="unchainedEditableBtn">
+            <Button
+              icon
+              className="editButtonUnchainedEditableEl"
+              onClick={() => {
+                this.setState({
+                  componentRearrangeData: jsonObj,
+                });
+              }}
+            >
+              <Icon name="setting" />
+            </Button>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    return this.developComponents(jsonObj);
   }
 
   showComponentSpecificPopup = (props) => {
@@ -100,17 +110,18 @@ class JSONComponentBuilder extends Component {
 
     return jsonObj.map((item) => {
       const componentName = item.type;
+
       const Element = components[componentName];
 
       if (Element) {
-        const children = this.buildChildComponents(item.value.children);
-        const props = JSON.parse(JSON.stringify(item.value));
+        const children = this.buildChildComponents(item.value.children, item.isEditable);
+        const props = JSON.parse(JSON.stringify(item.value.children));
         delete props.children;
 
         if (props.wrapperComponent === true) {
           return children;
         }
-        if (props.isEditable) {
+        if (item.isEditable) {
           return (
             <div className="unchainedEditableEl">
               <div className="unchainedEditableBtn">
@@ -118,11 +129,15 @@ class JSONComponentBuilder extends Component {
                   <Icon name="edit" />
                 </Button>
               </div>
-              <Element {...props}>{children}</Element>
+              <Element data={props}>{children}</Element>
             </div>
           );
         }
-        return <Element {...props}>{children}</Element>;
+        return <Element data={props}>{children}</Element>;
+      }
+
+      if (item.type.indexOf(this.unchainedControlPrefix) > -1) {
+        return null;
       }
 
       return (

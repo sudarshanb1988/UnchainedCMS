@@ -24,9 +24,7 @@ import './GICSection.scss';
 class GICSection extends Component {
   props: {
     children: {},
-    richText: '',
-    buttonText: '',
-    to: {}
+    data: []
   };
 
   state = {
@@ -40,7 +38,11 @@ class GICSection extends Component {
     pushToDataLayer('ourdepartment', 'viewAllCoverage');
   }
   render() {
-    const { children, richText, buttonText, to } = this.props;
+    const { children, data } = this.props;
+    const richText = data[0].value.richText;
+    const to = {};
+    const buttonText = '';
+
     return (
       <div className={`bmo-research ${buttonText ? 'ourdept' : ''}`}>
         <RichText richText={richText} />

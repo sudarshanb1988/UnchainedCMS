@@ -22,10 +22,7 @@ import './GICIcon.scss';
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 class GICIcon extends Component {
   props: {
-    altText: '',
-    image: '',
-    text: '',
-    to: '',
+    data: []
   };
 
   state = {
@@ -45,14 +42,21 @@ class GICIcon extends Component {
   }
 
   render() {
-    const { altText, image, text, to } = this.props;
+    const { data } = this.props;
+    const altText = data[0].value.altText;
+    const image = data[0].value.image;
+    const text = data[1].value.text;
+    const to = {};
+
     // URL format
     // library/?searchVal=energy&searchType=industry
     let url = '';
-    if (to.link_type === 'generic') {
-      url = to.url;
-    } else {
-      url = `${to.url}?gics=${text}`;
+    if (Object.keys(to).length) {
+      if (to.link_type === 'generic') {
+        url = to.url;
+      } else {
+        url = `${to.url}?gics=${text}`;
+      }
     }
     return (
       <div className="gic-card-logo">

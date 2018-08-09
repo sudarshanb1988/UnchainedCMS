@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const publicPath = process.env.PUBLIC_PATH || '/';
-const outputPath = path.join(process.cwd(), `dist`);
+const outputPath = path.join(process.cwd(), 'dist');
 
 const config = {
   entry: {
