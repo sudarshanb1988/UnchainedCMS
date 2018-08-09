@@ -83,3 +83,7 @@ export async function postConferenceData(data) {
 export async function getDisclosureInfo(id) {
   return post(`${apiUrl}/coverage/getDisclosureAndDisclaimer/`, { id });
 }
+
+export async function updateCMDData(json) {
+  return post(`${apiUrl}`, json);
+}

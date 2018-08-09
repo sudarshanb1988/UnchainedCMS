@@ -1,10 +1,17 @@
 .component-rearrange-modal {
+  * {
+    cursor: pointer;
+  }
   i.icon {
     color: black;
   }
   .edit-component {
     display: flex;
     align-items: center;
+    padding: 10px;
+  }
+  .hovered {
+    border: 1px dotted black;
   }
   .trash-icon {
     // position: absolute;
