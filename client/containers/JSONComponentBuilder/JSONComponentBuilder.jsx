@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { isEqual } from 'lodash';
 
-import Message from 'unchained-ui-react/src/components/containers/Message';
-
 import {
-  updateCMDData,
-} from 'api/auth';
+  Message,
+  Icon,
+  Button,
+} from 'unchained-ui-react';
 
 
 import BaseComponentEditModal from './BaseComponentEditModal';
@@ -73,7 +73,8 @@ class JSONComponentBuilder extends Component {
       <div className="unchainedEditableEl parentEl">
         {this.developComponents(jsonObj)}
         <div className="unchainedEditableBtn">
-          <button
+          <Button
+            icon
             className="editButtonUnchainedEditableEl"
             onClick={() => {
               this.setState({
@@ -81,8 +82,8 @@ class JSONComponentBuilder extends Component {
               });
             }}
           >
-            Edit
-          </button>
+            <Icon name="setting" />
+          </Button>
         </div>
       </div>
     );
@@ -113,7 +114,9 @@ class JSONComponentBuilder extends Component {
           return (
             <div className="unchainedEditableEl">
               <div className="unchainedEditableBtn">
-                <button className="editButtonUnchainedEditableEl" onClick={() => this.showComponentSpecificPopup(props)}>Edit</button>
+                <Button icon className="editButtonUnchainedEditableEl" onClick={() => this.showComponentSpecificPopup(props)}>
+                  <Icon name="edit" />
+                </Button>
               </div>
               <Element {...props}>{children}</Element>
             </div>
@@ -136,6 +139,7 @@ class JSONComponentBuilder extends Component {
     this.setState({ showComponentSpecificPopup: false, editableDataPoints: null });
   }
   updateCMDData = async (data) => {
+    const { jsonObj, editableDataPoints } = this.state;
     let updatedjsonObj = { ...jsonObj };
     if (data) {
       updatedjsonObj = jsonObj.body.map(fir => {
@@ -163,15 +167,13 @@ class JSONComponentBuilder extends Component {
         };
       });
     }
-    this.hidePopup();
-    const res = await updateCMDData({
-      ...jsonObj,
-      body: updatedjsonObj,
-    });
     this.setState({
-      jsonObj: res,
+      jsonObj: {
+        ...jsonObj,
+        body: updatedjsonObj,
+      },
     });
-    window.unchainedSite = res;
+    this.hidePopup();
   }
   render() {
     const {

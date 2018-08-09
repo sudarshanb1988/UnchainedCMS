@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { map } from 'lodash';
+import { map, flow } from 'lodash';
+import HTML5Backend from 'react-dnd-html5-backend';
 import classNames from 'classnames';
-
+import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
 import {
   Grid,
   Modal,
@@ -56,9 +57,8 @@ class ComponentRearrangeModal extends React.Component {
   render() {
     const { hidePopup } = this.props;
     const { componentData } = this.state;
-    const dataLength = componentData.length;
     return (
-      <Modal open className="unchainedEditableElSettingsPopup component-rearrange-modal" size="fullscreen">
+      <Modal open className="unchainedEditableElSettingsPopup component-rearrange-modal" size="fullscreen" onClose={() => hidePopup()}>
         <Modal.Header>
           Re-Position
         </Modal.Header>
@@ -68,16 +68,10 @@ class ComponentRearrangeModal extends React.Component {
               {
                 map(componentData, (ele, i) => {
                   return (
-                    <Grid.Column key={Math.random()}>
-                      <div
-                        className={classNames('edit-component', { hovered : ele.id === this.state.hoverDivId })}
-                        id={`editComponent${i}`}
-                        onDragStart={(ev) => {
-                          ev.dataTransfer.setData('string', JSON.stringify(ele));
-                        }}
-                        onDrop={(ev) => {
-                          ev.preventDefault();
-                          const data = JSON.parse(ev.dataTransfer.getData('string'));
+                    <Grid.Column key={i}>
+                      <DragAndDropComponent
+                        data={ele}
+                        onDropComponent={(data) => {
                           const newComponetData = [...componentData];
                           const dataLocation = componentData.indexOf(componentData.find((e) => e.id === data.id));
                           const eleLocation = componentData.indexOf(componentData.find((e) => e.id === ele.id));
@@ -87,19 +81,10 @@ class ComponentRearrangeModal extends React.Component {
                             componentData: newComponetData,
                           });
                         }}
-                        onDragOver={(ev) => {
-                          ev.preventDefault();
-                          this.setState({
-                            hoverDivId: ele.id,
-                          })
-                        }}
-                        draggable
                       >
-                        <div>
-                          {i + 1} {ele.value.altText}
-                          <Button className="trash-icon" icon="trash" onClick={() => this.removeComponentDate(i)} />
-                        </div>
-                      </div>
+                        {i + 1} {ele.value.altText}
+                        <Button className="trash-icon" icon="trash" onClick={() => this.removeComponentDate(i)} />
+                      </DragAndDropComponent>
                     </Grid.Column>
                   );
                 })
@@ -116,5 +101,60 @@ class ComponentRearrangeModal extends React.Component {
   }
 }
 
-export default ComponentRearrangeModal;
+export default DragDropContext(HTML5Backend)(ComponentRearrangeModal);
+
+class DragAndDrop extends React.Component { // eslint-disable-line
+  render() {
+    const { connectDragSource, connectDropTarget, children, isDragging } = this.props; // eslint-disable-line
+    return (
+      <div>
+        {
+          connectDragSource(connectDropTarget(
+            <div className={classNames({ dragging: isDragging })}>
+              {children}
+            </div>
+          ))
+        }
+      </div>
+    );
+  }
+}
+
+const DragAndDropComponent = flow(
+  DragSource(
+    'DragAndDrop',
+    {
+      beginDrag(props) {
+        console.log(props); // eslint-disable-line
+        return {
+          ...props,
+        };
+      },
+      endDrag(props) {
+        console.log(props); // eslint-disable-line
+      }
+    },
+    (connect, monitor) => {
+      return {
+        connectDragSource: connect.dragSource(),
+        // You can ask the monitor about the current drag state:
+        isDragging: monitor.isDragging()
+      };
+    }
+  ),
+  DropTarget(
+    'DragAndDrop',
+    {
+      drop(targetProps, monitor) {
+        const prevProps = monitor.getItem();
+        targetProps.onDropComponent(prevProps.data);
+        return targetProps;
+      }
+    },
+    (connect, monitor) => ({
+      connectDropTarget: connect.dropTarget(),
+      isOver: monitor.isOver(),
+    })
+  ),
+)(DragAndDrop);
 

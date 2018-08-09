@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
+import { Icon, Button, Input, Table, Modal } from 'unchained-ui-react';
 
-import Modal from 'unchained-ui-react/src/components/containers/Modal';
-import Table from 'unchained-ui-react/src/components/containers/Table';
-import Input from 'unchained-ui-react/src/components/controls/Input';
-import Button from 'unchained-ui-react/src/components/controls/Button';
+import './BaseComponentEditModal.scss';
+
+const SIZE = {
+  SMALL: 'small',
+  FULLSCREEN: 'fullscreen',
+};
 
 class BaseComponentEditModal extends Component {
   static propTypes = {
@@ -15,10 +18,11 @@ class BaseComponentEditModal extends Component {
   state = {
     showComponentSpecificPopup: false,
     settings: [],
+    size: SIZE.SMALL,
   };
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(getEditableSettingsContent(nextProps), this.state.settings)) {
+    if (!isEqual(this.getEditableSettingsContent(nextProps), this.state.settings)) {
       this.setState({
         settings: this.getEditableSettingsContent(nextProps),
       });
@@ -73,13 +77,42 @@ class BaseComponentEditModal extends Component {
     this.setState({ settings });
   }
 
-  render() {
-    const { settings } = this.state;
+  setSize = (size) => this.setState({
+    size,
+  });
 
+  render() {
+    const { settings, size } = this.state;
     return (
-      <Modal open={true} className="unchainedEditableElSettingsPopup">
+      <Modal
+        open
+        className="unchainedEditableElSettingsPopup"
+        size={size}
+        closeOnEscape
+        closeOnDimmerClick
+        onClose={this.hidePopup}
+      >
         <Modal.Header>
           Settings
+          <div className="actions">
+            {
+              size === 'small' ?
+                <Button
+                  type="button"
+                  icon
+                  onClick={() => this.setSize(SIZE.FULLSCREEN)}
+                >
+                  <Icon name="window maximize outline" />
+                </Button> :
+                <Button
+                  type="button"
+                  icon
+                  onClick={() => this.setSize(SIZE.SMALL)}
+                >
+                  <Icon name="window minimize outline" />
+                </Button>
+            }
+          </div>
         </Modal.Header>
         <Modal.Content>
           <Table celled striped>
