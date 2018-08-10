@@ -11,11 +11,22 @@
     padding: 10px;
     border: 1px dashed transparent;
   }
-  .hover {
-    background: lightgreen;
-    background: #90ee9045;
-    border: 1px dashed green;
+  
+  .component-dragging .edit-component {
+    border: 1px dashed black;
+    opacity: 0.5; 
+    &.dragging {
+      opacity: 0;
+      transition: all .25s;
+    }
+    &.hover {
+      // background: lightgreen;
+      background: #90ee9045;
+      border-color: green;
+      opacity: 1;
+    }
   }
+  
   .trash-icon {
     // position: absolute;
     // top: 10px;
