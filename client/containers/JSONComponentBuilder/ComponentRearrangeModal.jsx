@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { map } from 'lodash';
+import { map, flow } from 'lodash';
+import HTML5Backend from 'react-dnd-html5-backend';
 import classNames from 'classnames';
-
+import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
 import {
   Grid,
   Modal,
@@ -25,27 +26,6 @@ class ComponentRearrangeModal extends React.Component {
       componentData: props.data,
     };
   }
-
-  updateComponentData = (data, currentLocation, nextLocation, isStartPoint, isEndPoint) => {
-    const newComponentData = [...this.state.componentData];
-    if (!isStartPoint && !isEndPoint) {
-      newComponentData[currentLocation] = newComponentData[nextLocation];
-      newComponentData[nextLocation] = data;
-    } else if (isStartPoint) {
-      const newData = newComponentData.splice(0, 1);
-      newComponentData.push(newData[0]);
-    } else if (isEndPoint) {
-      map([...newComponentData], (ele, i) => {
-        if (i !== currentLocation) {
-          newComponentData[i + 1] = ele;
-        }
-      });
-      newComponentData[0] = data;
-    }
-    this.setState({
-      componentData: newComponentData,
-    });
-  }
   removeComponentDate = (index) => {
     const newComponentData = [...this.state.componentData];
     newComponentData.splice(index, 1);
@@ -56,9 +36,8 @@ class ComponentRearrangeModal extends React.Component {
   render() {
     const { hidePopup } = this.props;
     const { componentData } = this.state;
-    const dataLength = componentData.length;
     return (
-      <Modal open className="unchainedEditableElSettingsPopup component-rearrange-modal" size="fullscreen">
+      <Modal open className="unchainedEditableElSettingsPopup component-rearrange-modal" size="fullscreen" onClose={() => hidePopup()}>
         <Modal.Header>
           Re-Position
         </Modal.Header>
@@ -68,38 +47,23 @@ class ComponentRearrangeModal extends React.Component {
               {
                 map(componentData, (ele, i) => {
                   return (
-                    <Grid.Column key={Math.random()}>
-                      <div
-                        className={classNames('edit-component', { hovered : ele.id === this.state.hoverDivId })}
-                        id={`editComponent${i}`}
-                        onDragStart={(ev) => {
-                          ev.dataTransfer.setData('string', JSON.stringify(ele));
-                        }}
-                        onDrop={(ev) => {
-                          ev.preventDefault();
-                          const data = JSON.parse(ev.dataTransfer.getData('string'));
+                    <Grid.Column key={i}>
+                      <DragAndDropComponent
+                        data={ele}
+                        onDropComponent={(data) => {
                           const newComponetData = [...componentData];
-                          const dataLocation = componentData.indexOf(componentData.find((e) => e.id === data.id));
-                          const eleLocation = componentData.indexOf(componentData.find((e) => e.id === ele.id));
+                          const dataLocation = componentData.indexOf(data);
+                          const eleLocation = componentData.indexOf(ele);
                           newComponetData[dataLocation] = ele;
                           newComponetData[eleLocation] = data;
                           this.setState({
                             componentData: newComponetData,
                           });
                         }}
-                        onDragOver={(ev) => {
-                          ev.preventDefault();
-                          this.setState({
-                            hoverDivId: ele.id,
-                          })
-                        }}
-                        draggable
                       >
-                        <div>
-                          {i + 1} {ele.value.altText}
-                          <Button className="trash-icon" icon="trash" onClick={() => this.removeComponentDate(i)} />
-                        </div>
-                      </div>
+                        {i + 1} {ele.value.children[0].value.text}
+                        <Button className="trash-icon" icon="trash" onClick={() => this.removeComponentDate(i)} />
+                      </DragAndDropComponent>
                     </Grid.Column>
                   );
                 })
@@ -116,5 +80,71 @@ class ComponentRearrangeModal extends React.Component {
   }
 }
 
-export default ComponentRearrangeModal;
+export default DragDropContext(HTML5Backend)(ComponentRearrangeModal);
+
+class DragAndDrop extends React.Component { // eslint-disable-line
+  render() {
+    const { connectDragSource, connectDropTarget, children, isOver } = this.props; // eslint-disable-line
+    return (
+      <div>
+        {
+          connectDragSource(connectDropTarget(
+            <div
+              className={
+                classNames(
+                  'edit-component',
+                  {
+                    hover: isOver,
+                  }
+                )
+              }
+            >
+              {children}
+            </div>
+          ))
+        }
+      </div>
+    );
+  }
+}
+
+const DragAndDropComponent = flow(
+  DragSource(
+    'DragAndDrop',
+    {
+      beginDrag(props) {
+        return {
+          ...props,
+        };
+      },
+    },
+    (connect, monitor) => {
+      return {
+        connectDragSource: connect.dragSource(),
+        // You can ask the monitor about the current drag state:
+        isDragging: monitor.isDragging()
+      };
+    }
+  ),
+  DropTarget(
+    'DragAndDrop',
+    {
+      drop(targetProps, monitor) {
+        const prevProps = monitor.getItem();
+        targetProps.onDropComponent(prevProps.data);
+        return targetProps;
+      },
+      hover(props) {
+        return {
+          ...props,
+          isHover: true,
+        };
+      }
+    },
+    (connect, monitor) => ({
+      connectDropTarget: connect.dropTarget(),
+      isOver: monitor.isOver(),
+    })
+  ),
+)(DragAndDrop);
 

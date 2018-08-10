@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
-
 import { Modal, Container, Input, Button, Image, Grid, Label, Icon } from 'unchained-ui-react';
 import ReactQuill from 'react-quill';
+
+import './BaseComponentEditModal.scss';
+
+const SIZE = {
+  SMALL: 'small',
+  FULLSCREEN: 'fullscreen',
+};
 
 
 class BaseComponentEditModal extends Component {
@@ -15,27 +21,15 @@ class BaseComponentEditModal extends Component {
   state = {
     showComponentSpecificPopup: false,
     settings: [],
+    size: SIZE.SMALL,
   };
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(getEditableSettingsContent(nextProps), this.state.settings)) {
+    if (!isEqual(this.getEditableSettingsContent(nextProps), this.state.settings)) {
       this.setState({
         settings: Object.assign([], nextProps.editableDataPoints),
       });
     }
-  }
-
-  getRecursiveObject(editableDataPoints, o = {}) {
-    const obj = { ...o };
-    Object.keys(editableDataPoints).map(data => {
-      if (typeof editableDataPoints[data] === 'object') {
-        this.getRecursiveObject(editableDataPoints[data], obj);
-      }
-      if (typeof editableDataPoints[data] === 'string') {
-        obj[data] = editableDataPoints[data];
-      }
-    });
-    return obj;
   }
 
   componentWillMount() {
@@ -57,11 +51,11 @@ class BaseComponentEditModal extends Component {
   // }
 
   hidePopup = () => {
-    const data = {};
-    this.state.settings.map((ele) => {
-      data[ele.key] = ele.value;
-    });
-    this.props.cancelCB(data);
+    // const data = {};
+    // this.state.settings.map((ele) => {
+    //   data[ele.key] = ele.value;
+    // });
+    this.props.cancelCB(this.state.settings);
   }
 
   updateSettingsObj = (value, setting, type) => {
@@ -73,6 +67,8 @@ class BaseComponentEditModal extends Component {
     });
     this.setState({ settings });
   }
+
+  setSize = (size) => this.setState({ size });
 
   getControlType(setting) {
     switch (setting.type) {
@@ -120,12 +116,37 @@ class BaseComponentEditModal extends Component {
   }
 
   render() {
-    const { settings } = this.state;
-
+    const { settings, size } = this.state;
     return (
-      <Modal open={true} className="unchainedEditableElSettingsPopup">
+      <Modal
+        open
+        className="unchainedEditableElSettingsPopup"
+        size={size}
+        closeOnEscape
+        closeOnDimmerClick
+        onClose={this.hidePopup}
+      >
         <Modal.Header>
           Settings
+          <div className="actions">
+            {
+              size === 'small' ?
+                <Button
+                  type="button"
+                  icon
+                  onClick={() => this.setSize(SIZE.FULLSCREEN)}
+                >
+                  <Icon name="window maximize outline" />
+                </Button> :
+                <Button
+                  type="button"
+                  icon
+                  onClick={() => this.setSize(SIZE.SMALL)}
+                >
+                  <Icon name="window minimize outline" />
+                </Button>
+            }
+          </div>
         </Modal.Header>
         <Modal.Content>
           <Container>

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { isEqual } from 'lodash';
-
-import Message from 'unchained-ui-react/src/components/containers/Message';
-
+import { isEqual, map, cloneDeep } from 'lodash';
 import {
-  updateCMDData,
-} from 'api/auth';
+  Message,
+  Icon,
+  Button,
+} from 'unchained-ui-react';
 
 
 import BaseComponentEditModal from './BaseComponentEditModal';
@@ -81,7 +80,8 @@ class JSONComponentBuilder extends Component {
         <div className="unchainedEditableEl parentEl">
           {this.developComponents(jsonObj)}
           <div className="unchainedEditableBtn">
-            <button
+            <Button
+              icon
               className="editButtonUnchainedEditableEl"
               onClick={() => {
                 this.setState({
@@ -89,8 +89,8 @@ class JSONComponentBuilder extends Component {
                 });
               }}
             >
-              Edit
-            </button>
+              <Icon name="setting" />
+            </Button>
           </div>
         </div>
       );
@@ -124,7 +124,9 @@ class JSONComponentBuilder extends Component {
           return (
             <div className="unchainedEditableEl">
               <div className="unchainedEditableBtn">
-                <button className="editButtonUnchainedEditableEl" onClick={() => this.showComponentSpecificPopup(props)}>Edit</button>
+                <Button icon className="editButtonUnchainedEditableEl" onClick={() => this.showComponentSpecificPopup(props)}>
+                  <Icon name="edit" />
+                </Button>
               </div>
               <Element data={props}>{children}</Element>
             </div>
@@ -150,43 +152,54 @@ class JSONComponentBuilder extends Component {
   hidePopup = () => {
     this.setState({ showComponentSpecificPopup: false, editableDataPoints: null });
   }
-  updateCMDData = async (data) => {
-    let updatedjsonObj = { ...jsonObj };
-    if (data) {
-      updatedjsonObj = jsonObj.body.map(fir => {
-        const firChildren = fir.value.children.map((sec) => {
-          const newSec = { ...sec };
-          const rightSec = sec.id === editableDataPoints.parentId;
-          if (rightSec) {
-            newSec.value = {
-              ...newSec.value,
-              ...data,
-              to: {
-                ...newSec.value.to,
-                url: data.url,
-              }
-            };
-          }
-          return newSec;
-        });
-        return {
-          ...fir,
-          value: {
-            ...fir.value,
-            children: firChildren,
-          },
-        };
+
+  updateNode = (data, nodeId, changedData) => {
+    if (Array.isArray(data)) {
+      data.map(item => {
+        if (item.id === nodeId) {
+          item.value.children = changedData; // eslint-disable-line
+        }
+        return this.updateNode(item.value.children, nodeId, changedData);
       });
     }
-    this.hidePopup();
-    const res = await updateCMDData({
-      ...jsonObj,
-      body: updatedjsonObj,
-    });
+  }
+
+  updateJsonObjData = (data, parentData) => {
+    if (Array.isArray(parentData)) {
+      return map(parentData, (json) => {
+        if (data[0].parent_id === json.id) {
+          const newParentData = cloneDeep(json);
+          newParentData.value.children = data;
+          return newParentData;
+        }
+        if (json.value.children) {
+          return this.updateJsonObjData(data, json.value.children);
+        }
+        return json;
+      });
+    } else if (Array.isArray(data) && data[0].parent_id === parentData.id) {
+      const newParentData = parentData;
+      newParentData.value.children = data;
+      return newParentData;
+    } else if (jsonObj.value.children) {
+      return this.updateJsonObjData(data, jsonObj.children);
+    }
+    return parentData;
+  }
+
+  updateCMDData = async (data) => {
+    const { jsonObj } = this.state;
+    // let updatedjsonObj = { ...jsonObj };
+    if (data) {
+      this.updateNode(jsonObj.body, data[0].parent_id, data);
+      // updatedjsonObj = this.updateJsonObjData(data, jsonObj.body);
+    }
     this.setState({
-      jsonObj: res,
+      jsonObj: {
+        ...jsonObj,
+      }
     });
-    window.unchainedSite = res;
+    this.hidePopup();
   }
   render() {
     const {
@@ -219,7 +232,7 @@ class JSONComponentBuilder extends Component {
             hidePopup={(data) => {
               const updatedjsonObj = { ...jsonObj };
               if (data) {
-                const changedData = jsonObj.body.find((e) => (e.id === data[0].parentId));
+                const changedData = jsonObj.body.find((e) => (e.id === data[0].parent_id));
                 const changedDataLocation = changedData && jsonObj.body.indexOf(changedData);
                 if (changedDataLocation >= 0) {
                   updatedjsonObj.body[changedDataLocation].value.children = data;

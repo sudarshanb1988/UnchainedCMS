@@ -17,11 +17,14 @@
   text-align: right;
   
   .unchainedEditableBtn {
-    background-color: red !important;
+    // background-color: red !important;
     text-align: right;
     display: inline;
     position: absolute;
-    z-index: 99998;
+    z-index: 300;
+  }
+  .ui.button.icon i.icon{
+    color: black;
   }
   .editButtonUnchainedEditableEl {
     background: transparent;
