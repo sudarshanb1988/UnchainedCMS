@@ -26,27 +26,6 @@ class ComponentRearrangeModal extends React.Component {
       componentData: props.data,
     };
   }
-
-  updateComponentData = (data, currentLocation, nextLocation, isStartPoint, isEndPoint) => {
-    const newComponentData = [...this.state.componentData];
-    if (!isStartPoint && !isEndPoint) {
-      newComponentData[currentLocation] = newComponentData[nextLocation];
-      newComponentData[nextLocation] = data;
-    } else if (isStartPoint) {
-      const newData = newComponentData.splice(0, 1);
-      newComponentData.push(newData[0]);
-    } else if (isEndPoint) {
-      map([...newComponentData], (ele, i) => {
-        if (i !== currentLocation) {
-          newComponentData[i + 1] = ele;
-        }
-      });
-      newComponentData[0] = data;
-    }
-    this.setState({
-      componentData: newComponentData,
-    });
-  }
   removeComponentDate = (index) => {
     const newComponentData = [...this.state.componentData];
     newComponentData.splice(index, 1);
@@ -73,8 +52,8 @@ class ComponentRearrangeModal extends React.Component {
                         data={ele}
                         onDropComponent={(data) => {
                           const newComponetData = [...componentData];
-                          const dataLocation = componentData.indexOf(componentData.find((e) => e.id === data.id));
-                          const eleLocation = componentData.indexOf(componentData.find((e) => e.id === ele.id));
+                          const dataLocation = componentData.indexOf(data);
+                          const eleLocation = componentData.indexOf(ele);
                           newComponetData[dataLocation] = ele;
                           newComponetData[eleLocation] = data;
                           this.setState({
@@ -82,7 +61,7 @@ class ComponentRearrangeModal extends React.Component {
                           });
                         }}
                       >
-                        {i + 1} {ele.value.altText}
+                        {i + 1} {ele.value.children[0].value.text}
                         <Button className="trash-icon" icon="trash" onClick={() => this.removeComponentDate(i)} />
                       </DragAndDropComponent>
                     </Grid.Column>

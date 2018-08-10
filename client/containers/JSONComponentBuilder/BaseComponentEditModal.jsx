@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
 import { Modal, Container, Input, Button, Image, Grid, Label, Icon } from 'unchained-ui-react';
+import ReactQuill from 'react-quill';
 
 import './BaseComponentEditModal.scss';
 
@@ -9,7 +10,6 @@ const SIZE = {
   SMALL: 'small',
   FULLSCREEN: 'fullscreen',
 };
-import ReactQuill from 'react-quill';
 
 
 class BaseComponentEditModal extends Component {
@@ -32,19 +32,6 @@ class BaseComponentEditModal extends Component {
     }
   }
 
-  getRecursiveObject(editableDataPoints, o = {}) {
-    const obj = { ...o };
-    Object.keys(editableDataPoints).map(data => {
-      if (typeof editableDataPoints[data] === 'object') {
-        this.getRecursiveObject(editableDataPoints[data], obj);
-      }
-      if (typeof editableDataPoints[data] === 'string') {
-        obj[data] = editableDataPoints[data];
-      }
-    });
-    return obj;
-  }
-
   componentWillMount() {
     this.setState({ settings: Object.assign([], this.props.editableDataPoints) });
   }
@@ -64,11 +51,11 @@ class BaseComponentEditModal extends Component {
   // }
 
   hidePopup = () => {
-    const data = {};
-    this.state.settings.map((ele) => {
-      data[ele.key] = ele.value;
-    });
-    this.props.cancelCB(data);
+    // const data = {};
+    // this.state.settings.map((ele) => {
+    //   data[ele.key] = ele.value;
+    // });
+    this.props.cancelCB(this.state.settings);
   }
 
   updateSettingsObj = (value, setting, type) => {
@@ -82,7 +69,7 @@ class BaseComponentEditModal extends Component {
   }
 
   setSize = (size) => this.setState({ size });
-  
+
   getControlType(setting) {
     switch (setting.type) {
       case 'UnchainedCtrlRichTextBlock':
