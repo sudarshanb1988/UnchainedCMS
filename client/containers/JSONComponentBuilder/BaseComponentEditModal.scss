@@ -1,0 +1,17 @@
+.ui.modal.unchainedEditableElSettingsPopup {
+  .header {
+    display: flex;
+    align-items: center;    
+    .actions {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      .button.icon {
+        color: black;
+        padding: 0;
+        font-size: 0.7em;
+      }
+    }
+  }
+}

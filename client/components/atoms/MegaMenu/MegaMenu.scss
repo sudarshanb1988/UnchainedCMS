@@ -1,0 +1,214 @@
+/*
+ * Component: MegaMenu
+ */
+
+@import '../../../styles/variables';
+
+// (IMPORTANT: please create the styles such that the larger breakpoints
+// override the smaller ones. "Mobile First")
+
+.mega-menu {
+  position: fixed;
+  top: 55px;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: $primaryWhite;
+  z-index: 999;
+  overflow: hidden;
+  .ui.button.mega-menu-close-icon {
+    width: 28px;
+    height: auto;
+    display: table-cell;
+    float: right;
+    padding-right: 0;
+    margin-right: 0;
+  }
+  .mega-menu-holder {
+    .row {
+      height: auto;
+      &.menu-header {
+        box-shadow: none;
+      }
+    }
+    &.ui.grid {
+      background-color: $primaryWhite;
+      max-width: $screen-windows-lg;
+      margin: auto;
+      height: calc(100% - 16px);
+      display: block;
+      padding: 10px;
+      .row.mega-menu-links-set{
+        height: calc(100% - 100px);
+        overflow: scroll;
+        padding: 0;
+        -ms-overflow-style: none;
+        .mega-menu-column {
+          padding: 0 30px;
+          width: 25% !important; //need
+          display: inline-block;
+        }
+      }
+      .row.mega-menu-links-set::-webkit-scrollbar {
+        display: none;
+      }
+      .ui.button.menu-name.blue:hover {
+        background-color: $primaryWhite;
+      }
+      .mega-menu-title {
+        display: table;
+        padding: 30px;
+        .heading {
+          display: table-cell;
+          vertical-align: middle;
+          padding-left: 1em;
+          color: $primaryBlue;
+        }
+      }
+    }
+  }
+}
+
+// Small Breakpoint
+@media (max-width: $screen-md - 1) {
+  .mega-menu {
+    .mega-menu-holder.ui.grid .row.mega-menu-links-set {
+      .mobile.column.mega-menu-column {
+        padding: 0 15px;
+      }
+    }
+    .twelve.wide.computer.column.mega-menu-title {
+      padding: 0 10px;
+    }
+  }
+}
+
+// Small Breakpoint
+@media (max-width: $screen-sm-min) {
+  .mega-menu {
+    padding: 0;
+    top: 0;
+    .ui.button.mega-menu-close-icon {
+      margin-top: 0;
+      width: 26px !important;
+      padding: 10px !important;
+
+    }
+    .twelve.wide.computer.column.mega-menu-title {
+      padding: 15px;
+    }
+    .mega-menu-holder {
+      &.ui.grid {
+        padding: 0;
+      }
+      .row {
+        height: auto;
+        &.menu-header {
+          padding: 0;
+          box-shadow: none; 
+        }
+      }
+      &.ui.grid {
+        height: 100%;
+        overflow: scroll;
+      }
+    }
+    .mega-menu-holder.ui.grid .row.mega-menu-links-set {
+      height: calc(100% - 60px);
+      padding: 0;
+      .mobile.column.mega-menu-column {
+        padding: 0;
+        width: 100% !important;
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.mega-menu-container {
+  height: auto;
+  display: inline-flex;
+  vertical-align: middle;
+  cursor: pointer;
+  padding-top: 35px;
+  .ui.image.desktop {
+    display: block;
+  }
+  .ui.image.mobile {
+    display: none;
+  }
+  .ui.image{
+    width: 35px;
+    display: inline-block;
+    height: $mega-menu-icon-width + 1;
+    border: none;
+  }
+  .ui.button.menu-name {
+    background: transparent;
+    display: table-cell;
+    
+    vertical-align: middle;
+    font-size: $deskSz8;
+    border: none;
+    padding: unset;
+    padding-left: 18px;
+  }
+  .menu-name{
+    &.ui.button.blue {
+      color: $primaryBlue;
+      font-size: $deskSz9;
+    }
+    &.ui.button.white {
+      color: $primaryWhite;
+      font-size: $deskSz9;
+    }
+  }
+}
+
+// Small Breakpoint
+@media (max-width: $screen-sm-min - 1) {
+  .mega-menu-container {
+    top: -86px;
+    position: relative;
+    background-color: #fff;
+    padding-top: 0px;
+    .ui.image.desktop {
+      display: none;
+    }
+    .ui.image.mobile {
+      display: block;
+      height: 20px;
+      width: 25px;
+    }
+    .ui.button.menu-name {
+      display: none;
+    }
+    .mega-menu-holder {
+      .row {
+        height: auto;
+        &.menu-header {
+          padding: 0;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+
+// Small Breakpoint
+@media (max-width: $screen-xs-sm) {
+  .mega-menu-container {
+    top: -79px;
+    position: relative;
+    background-color: #fff;
+    padding-top: 0px;
+  }
+}
+
+
+// Large Breakpoint
+@media (min-width: $screen-lg-min) {
+  .mega-menu-container {
+    // override md breakpoint styles
+  }
+}
