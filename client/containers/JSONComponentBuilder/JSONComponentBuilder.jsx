@@ -86,6 +86,7 @@ class JSONComponentBuilder extends Component {
               onClick={() => {
                 this.setState({
                   componentRearrangeData: jsonObj,
+                  componentType: jsonObj[0].type,
                 });
               }}
             >
@@ -209,7 +210,9 @@ class JSONComponentBuilder extends Component {
       editableDataPoints,
       jsonObj,
     } = this.state;
-
+    const {
+      components
+    } = this.props;
     return (
       <div>
         <Helmet>
@@ -229,6 +232,7 @@ class JSONComponentBuilder extends Component {
           <ComponentRearrangeModal
             data={componentRearrangeData}
             type={componentType}
+            components={components}
             hidePopup={(data) => {
               const updatedjsonObj = { ...jsonObj };
               if (data) {

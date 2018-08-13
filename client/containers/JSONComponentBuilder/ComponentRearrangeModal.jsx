@@ -1,16 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import { map, flow } from 'lodash';
-import HTML5Backend from 'react-dnd-html5-backend';
 import classNames from 'classnames';
-import { DragSource, DropTarget, DragDropContext } from 'react-dnd';
+import { map } from 'lodash';
+
 import {
   Grid,
   Modal,
   Button,
 } from 'unchained-ui-react';
 
+import DragAndDropComponent from './DragAndDrop';
 
 import './ComponentRearrangeModal.scss';
 
@@ -35,7 +34,7 @@ class ComponentRearrangeModal extends React.Component {
   }
   render() {
     const { hidePopup } = this.props;
-    const { componentData } = this.state;
+    const { componentData, isDragging } = this.state;
     return (
       <Modal open className="unchainedEditableElSettingsPopup component-rearrange-modal" size="fullscreen" onClose={() => hidePopup()}>
         <Modal.Header>
@@ -43,13 +42,23 @@ class ComponentRearrangeModal extends React.Component {
         </Modal.Header>
         <Modal.Content>
           <Grid divided>
-            <Grid.Row columns={4}>
+            <Grid.Row
+              columns={4}
+              className={
+                classNames(
+                  {
+                    'component-dragging': isDragging,
+                  }
+                )
+              }
+            >
               {
                 map(componentData, (ele, i) => {
                   return (
                     <Grid.Column key={i}>
                       <DragAndDropComponent
                         data={ele}
+                        onDrag={(isDragging) => { this.setState({ isDragging }); }}
                         onDropComponent={(data) => {
                           const newComponetData = [...componentData];
                           const dataLocation = componentData.indexOf(data);
@@ -80,71 +89,4 @@ class ComponentRearrangeModal extends React.Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(ComponentRearrangeModal);
-
-class DragAndDrop extends React.Component { // eslint-disable-line
-  render() {
-    const { connectDragSource, connectDropTarget, children, isOver } = this.props; // eslint-disable-line
-    return (
-      <div>
-        {
-          connectDragSource(connectDropTarget(
-            <div
-              className={
-                classNames(
-                  'edit-component',
-                  {
-                    hover: isOver,
-                  }
-                )
-              }
-            >
-              {children}
-            </div>
-          ))
-        }
-      </div>
-    );
-  }
-}
-
-const DragAndDropComponent = flow(
-  DragSource(
-    'DragAndDrop',
-    {
-      beginDrag(props) {
-        return {
-          ...props,
-        };
-      },
-    },
-    (connect, monitor) => {
-      return {
-        connectDragSource: connect.dragSource(),
-        // You can ask the monitor about the current drag state:
-        isDragging: monitor.isDragging()
-      };
-    }
-  ),
-  DropTarget(
-    'DragAndDrop',
-    {
-      drop(targetProps, monitor) {
-        const prevProps = monitor.getItem();
-        targetProps.onDropComponent(prevProps.data);
-        return targetProps;
-      },
-      hover(props) {
-        return {
-          ...props,
-          isHover: true,
-        };
-      }
-    },
-    (connect, monitor) => ({
-      connectDropTarget: connect.dropTarget(),
-      isOver: monitor.isOver(),
-    })
-  ),
-)(DragAndDrop);
-
+export default ComponentRearrangeModal;
