@@ -11,6 +11,7 @@ import {
 
 import BaseComponentEditModal from './BaseComponentEditModal';
 import ComponentRearrangeModal from './ComponentRearrangeModal';
+import ImagePickerModal from "./ImagePickerModal";
 
 class JSONComponentBuilder extends Component {
   static propTypes = {
@@ -206,6 +207,7 @@ class JSONComponentBuilder extends Component {
     const {
       showComponentSpecificPopup,
       componentRearrangeData,
+      imageChangeData,
       componentType,
       editableDataPoints,
       jsonObj,
@@ -248,6 +250,9 @@ class JSONComponentBuilder extends Component {
               });
             }}
           />
+        }
+        {
+          imageChangeData && <ImagePickerModal />
         }
       </div>
     );

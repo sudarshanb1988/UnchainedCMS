@@ -84,6 +84,6 @@ export async function getDisclosureInfo(id) {
   return post(`${apiUrl}/coverage/getDisclosureAndDisclaimer/`, { id });
 }
 
-export async function updateCMDData(json) {
-  return post(`${apiUrl}`, json);
+export async function updateCMDData(id, json) {
+  return post(`${apiUrl}/${id}`, json);
 }
