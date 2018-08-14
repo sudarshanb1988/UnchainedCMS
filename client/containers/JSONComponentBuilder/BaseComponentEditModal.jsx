@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { isEqual } from 'lodash';
+// import { isEqual } from 'lodash';
 import { Modal, Container, Input, Button, Image, Grid, Label, Icon } from 'unchained-ui-react';
 import ReactQuill from 'react-quill';
+
+import ImagePickerModal from './ImagePickerModal';
 
 import './BaseComponentEditModal.scss';
 
@@ -24,13 +26,13 @@ class BaseComponentEditModal extends Component {
     size: SIZE.SMALL,
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.getEditableSettingsContent(nextProps), this.state.settings)) {
-      this.setState({
-        settings: Object.assign([], nextProps.editableDataPoints),
-      });
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (!isEqual(this.getEditableSettingsContent(nextProps), this.state.settings)) {
+  //     this.setState({
+  //       settings: Object.assign([], nextProps.editableDataPoints),
+  //     });
+  //   }
+  // }
 
   componentWillMount() {
     this.setState({ settings: Object.assign([], this.props.editableDataPoints) });
@@ -94,7 +96,14 @@ class BaseComponentEditModal extends Component {
               <Image
                 src={setting.value.image}
               />
-              <Button className="editBtn">
+              <Button
+                className="editBtn"
+                onClick={() => {
+                  this.setState({
+                    showImagePicker: true,
+                  });
+                }}
+              >
                 <Icon name={'edit'} />
               </Button>
             </Grid.Column>
@@ -116,7 +125,7 @@ class BaseComponentEditModal extends Component {
   }
 
   render() {
-    const { settings, size } = this.state;
+    const { settings, size, showImagePicker } = this.state;
     return (
       <Modal
         open
@@ -158,6 +167,19 @@ class BaseComponentEditModal extends Component {
                   </div>
                 );
               })
+            }
+            {
+              showImagePicker &&
+                <ImagePickerModal
+                  updateImage={(data) => {
+                    console.log(data); // eslint-disable-line
+                  }}
+                  handleModal={(showImagePicker) => {
+                    this.setState({
+                      showImagePicker,
+                    });
+                  }}
+                />
             }
           </Container>
         </Modal.Content>
