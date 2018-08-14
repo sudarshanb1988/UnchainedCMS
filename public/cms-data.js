@@ -4,7 +4,7 @@ window.unchainedSite = {
   "data": [
     {
       "meta": {
-        "type": "blog.BlogPage",
+        "type": "home.HomePage",
         "search_description": "",
         "html_url": "http://localhost/blog2-test/",
         "first_published_at": "2018-08-03T04:08:42.880537Z",
@@ -384,7 +384,7 @@ window.unchainedSite = {
           "id": "8a23ace1-7734-4113-8d70-5e87118396a5"
         }
       ],
-      "id": 7
+      "id": 4
     },
     {
       "meta": {

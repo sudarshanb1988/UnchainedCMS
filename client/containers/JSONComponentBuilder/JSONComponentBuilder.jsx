@@ -8,6 +8,7 @@ import {
   Button,
 } from 'unchained-ui-react';
 
+import { updateCMDData } from 'api/auth';
 
 import BaseComponentEditModal from './BaseComponentEditModal';
 import ComponentRearrangeModal from './ComponentRearrangeModal';
@@ -195,6 +196,13 @@ class JSONComponentBuilder extends Component {
       this.updateNode(jsonObj.body, data[0].parent_id, data);
       // updatedjsonObj = this.updateJsonObjData(data, jsonObj.body);
     }
+    await updateCMDData(
+      jsonObj.id,
+      {
+        type: jsonObj.meta.type,
+        body: jsonObj.body,
+      }
+    );
     this.setState({
       jsonObj: {
         ...jsonObj,

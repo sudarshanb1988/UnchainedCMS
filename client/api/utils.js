@@ -87,11 +87,20 @@ function requestWrapper(method) {
       defaults.body = data;
     }
 
-    const paramsObj = { ...defaults, headers: { ...params, ...defaults.headers } };
+    const paramsObj = {
+      ...defaults,
+      headers: {
+        ...params,
+        ...defaults.headers,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': '*',
+        'Access-Control-Allow-Headers': '*',
+      }
+    };
 
-    if (!shouldEscapeToken) {
-      paramsObj.credentials = 'include';
-    }
+    // if (!shouldEscapeToken) {
+    //   paramsObj.credentials = 'include';
+    // }
 
     return fetch(url, paramsObj).then(parseJSON).catch(err => {
       console.error(err); // eslint-disable-line

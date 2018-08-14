@@ -84,6 +84,24 @@ export async function getDisclosureInfo(id) {
   return post(`${apiUrl}/coverage/getDisclosureAndDisclaimer/`, { id });
 }
 
-export async function updateCMDData(json) {
-  return post(`${apiUrl}`, json);
+/*
+  body: {
+    type: "blog.BlogPage",
+    body: [] // page body
+  }
+*/
+
+export async function updateCMDData(id, json) {
+  return post(`${apiUrl}/save-page/${id}/`, json);
+}
+
+/*
+  {
+    title: name of image.
+    file: file,
+  }
+*/
+
+export async function uploadImage(data) {
+  return post(`${apiUrl}/upload-image/`, data);
 }
