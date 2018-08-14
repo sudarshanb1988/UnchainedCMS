@@ -95,6 +95,13 @@ export async function updateCMDData(id, json) {
   return post(`${apiUrl}/save-page/${id}/`, json);
 }
 
+/*
+  {
+    title: name of image.
+    file: file,
+  }
+*/
+
 export async function uploadImage(data) {
-  return post(`${apiUrl}`, data);
+  return post(`${apiUrl}/upload-image/`, data);
 }
