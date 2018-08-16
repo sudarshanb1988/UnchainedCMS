@@ -119,14 +119,14 @@ class BaseComponentEditModal extends Component {
                   icon
                   onClick={() => this.setSize(SIZE.FULLSCREEN)}
                 >
-                  <Icon name="window maximize outline" />
+                  <Icon name="window maximize" />
                 </Button> :
                 <Button
                   type="button"
                   icon
                   onClick={() => this.setSize(SIZE.SMALL)}
                 >
-                  <Icon name="window minimize outline" />
+                  <Icon name="window minimize" />
                 </Button>
             }
           </div>

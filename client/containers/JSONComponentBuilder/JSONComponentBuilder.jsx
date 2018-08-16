@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { isEqual, map, cloneDeep } from 'lodash';
+import { isEqual } from 'lodash';
 import {
   Message,
-  Icon,
-  Button,
 } from 'unchained-ui-react';
 
-import { updateCMDData } from 'api/auth';
-
-import BaseComponentEditModal from './BaseComponentEditModal';
-import ComponentRearrangeModal from './ComponentRearrangeModal';
+import ContainerEditor from './ContainerEditor';
+import ComponentEditor from './ComponentEditor';
 
 class JSONComponentBuilder extends Component {
   static propTypes = {
@@ -78,30 +74,12 @@ class JSONComponentBuilder extends Component {
     }
     if (isEditable) {
       return (
-        <div className="unchainedEditableEl parentEl">
+        <ContainerEditor componentData={jsonObj} jsonObj={this.state.jsonObj} updateJsonData={this.updateJsonData}>
           {this.developComponents(jsonObj)}
-          <div className="unchainedEditableBtn">
-            <Button
-              icon
-              className="editButtonUnchainedEditableEl"
-              onClick={() => {
-                this.setState({
-                  componentRearrangeData: jsonObj,
-                  componentType: jsonObj[0].type,
-                });
-              }}
-            >
-              <Icon name="setting" />
-            </Button>
-          </div>
-        </div>
+        </ContainerEditor>
       );
     }
     return this.developComponents(jsonObj);
-  }
-
-  showComponentSpecificPopup = (props) => {
-    this.setState({ showComponentSpecificPopup: true, editableDataPoints: props });
   }
 
   developComponents(jsonObj) {
@@ -124,14 +102,9 @@ class JSONComponentBuilder extends Component {
         }
         if (item.isEditable) {
           return (
-            <div className="unchainedEditableEl">
-              <div className="unchainedEditableBtn">
-                <Button icon className="editButtonUnchainedEditableEl" onClick={() => this.showComponentSpecificPopup(props)}>
-                  <Icon name="edit" />
-                </Button>
-              </div>
+            <ComponentEditor componentData={props} jsonObj={this.state.jsonObj} updateJsonData={this.updateJsonData}>
               <Element data={props}>{children}</Element>
-            </div>
+            </ComponentEditor>
           );
         }
         return <Element data={props}>{children}</Element>;
@@ -150,6 +123,8 @@ class JSONComponentBuilder extends Component {
       );
     });
   }
+
+  updateJsonData = (jsonData) => this.setState({ jsonObj: jsonData })
 
   render() {
     const {

@@ -1,18 +1,36 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import { updateCMDData } from 'api/auth';
+import {
+  Icon,
+  Button,
+} from 'unchained-ui-react';
+
+// import { updateCMDData } from 'api/auth';
 
 import BaseComponentEditModal from './BaseComponentEditModal';
-import ComponentRearrangeModal from './ComponentRearrangeModal';
 
 class ComponentEditor extends React.Component {
   static propTypes = {
     jsonObj: PropTypes.object,
-    components: PropTypes.object,
+    children: PropTypes.object,
+    updateJsonData: PropTypes.func,
+    componentData: PropTypes.object,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showComponentSpecificPopup: false,
+    };
+  }
 
   hidePopup = () => {
     this.setState({ showComponentSpecificPopup: false, editableDataPoints: null });
+  }
+
+  showComponentSpecificPopup = (props) => {
+    this.setState({ showComponentSpecificPopup: true, editableDataPoints: props });
   }
 
   updateNode = (data, nodeId, changedData) => {
@@ -26,45 +44,20 @@ class ComponentEditor extends React.Component {
     }
   }
 
-  updateJsonObjData = (data, parentData) => {
-    if (Array.isArray(parentData)) {
-      return map(parentData, (json) => {
-        if (data[0].parent_id === json.id) {
-          const newParentData = cloneDeep(json);
-          newParentData.value.children = data;
-          return newParentData;
-        }
-        if (json.value.children) {
-          return this.updateJsonObjData(data, json.value.children);
-        }
-        return json;
-      });
-    } else if (Array.isArray(data) && data[0].parent_id === parentData.id) {
-      const newParentData = parentData;
-      newParentData.value.children = data;
-      return newParentData;
-    } else if (jsonObj.value.children) {
-      return this.updateJsonObjData(data, jsonObj.children);
-    }
-    return parentData;
-  }
-
   updateCMDData = async (data) => {
-    const { jsonObj } = this.props;
+    const { jsonObj, updateJsonData } = this.props;
     if (data) {
       this.updateNode(jsonObj.body, data[0].parent_id, data);
     }
-    await updateCMDData(
-      jsonObj.id,
-      {
-        type: jsonObj.meta.type,
-        body: jsonObj.body,
-      }
-    );
-    this.setState({
-      jsonObj: {
-        ...jsonObj,
-      }
+    // await updateCMDData(
+    //   jsonObj.id,
+    //   {
+    //     type: jsonObj.meta.type,
+    //     body: jsonObj.body,
+    //   }
+    // );
+    updateJsonData({
+      ...jsonObj,
     });
     this.hidePopup();
   }
@@ -72,45 +65,26 @@ class ComponentEditor extends React.Component {
   render() {
     const {
       showComponentSpecificPopup,
-      componentRearrangeData,
-      componentType,
       editableDataPoints,
-      jsonObj,
     } = this.state;
     const {
-      components
+      children,
+      componentData,
     } = this.props;
     return (
-      <div>
+      <div className="unchainedEditableEl">
+        <div className="unchainedEditableBtn">
+          <Button icon className="editButtonUnchainedEditableEl" onClick={() => this.showComponentSpecificPopup(componentData)}>
+            <Icon name="edit" />
+          </Button>
+        </div>
+        {children}
         {
-          showComponentSpecificPopup ?
+          showComponentSpecificPopup &&
             <BaseComponentEditModal
               editableDataPoints={editableDataPoints}
               cancelCB={this.updateCMDData}
             />
-            : null
-        }
-        {
-          componentRearrangeData &&
-          <ComponentRearrangeModal
-            data={componentRearrangeData}
-            type={componentType}
-            components={components}
-            hidePopup={(data) => {
-              const updatedjsonObj = { ...jsonObj };
-              if (data) {
-                const changedData = jsonObj.body.find((e) => (e.id === data[0].parent_id));
-                const changedDataLocation = changedData && jsonObj.body.indexOf(changedData);
-                if (changedDataLocation >= 0) {
-                  updatedjsonObj.body[changedDataLocation].value.children = data;
-                }
-              }
-              this.setState({
-                componentRearrangeData: null,
-                jsonObj: updatedjsonObj,
-              });
-            }}
-          />
         }
       </div>
     );
