@@ -24,7 +24,7 @@ class ContainerEditor extends React.Component {
     };
   }
 
-  showModal = (jsonObj) => this.setState({ componentRearrangeData: jsonObj, componentType: jsonObj[0].type });
+  showModal = (componentData) => this.setState({ componentRearrangeData: componentData, componentType: componentData[0].type });
   hideModal = () => this.setState({ componentRearrangeData: null, componentType: null });
 
   render() {
@@ -46,12 +46,7 @@ class ContainerEditor extends React.Component {
           <Button
             icon
             className="editButtonUnchainedEditableEl"
-            onClick={() => {
-              this.setState({
-                componentRearrangeData: componentData,
-                componentType: componentData[0].type,
-              });
-            }}
+            onClick={() => this.showModal(componentData)}
           >
             <Icon name="setting" />
           </Button>
