@@ -5,13 +5,16 @@ import {
   post,
   del,
   get,
-  put
+  put,
+  uploadFile,
 } from './utils';
 
-let { apiUrl } = config;
+let { apiUrl, dataAPIUrl } = config;
 
 
 if (!apiUrl) apiUrl = '';
+
+if (!dataAPIUrl) dataAPIUrl = '';
 
 export function getLocalToken() {
   return getCookie('token');
@@ -103,5 +106,9 @@ export async function updateCMDData(id, json) {
 */
 
 export async function uploadImage(data) {
-  return post(`${apiUrl}/upload-image/`, data);
+  return uploadFile(data, '/upload-image/');
+}
+
+export async function getImages() {
+  return get(`${dataAPIUrl}/images`);
 }

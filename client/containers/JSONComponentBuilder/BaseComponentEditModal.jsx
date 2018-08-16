@@ -26,38 +26,12 @@ class BaseComponentEditModal extends Component {
     size: SIZE.SMALL,
   };
 
-  // componentWillReceiveProps(nextProps) {
-  //   if (!isEqual(this.getEditableSettingsContent(nextProps), this.state.settings)) {
-  //     this.setState({
-  //       settings: Object.assign([], nextProps.editableDataPoints),
-  //     });
-  //   }
-  // }
-
   componentWillMount() {
     this.setState({ settings: Object.assign([], this.props.editableDataPoints) });
   }
 
-  // getEditableSettingsContent = (props) => {
-  //   const { editableDataPoints } = props;
-  //   if (editableDataPoints) {
-  //     return editableDataPoints.map(item => {
-  //       return {
-  //         key: item,
-  //         value: obj[item],
-  //         type: item.type
-  //       };
-  //     });
-  //   }
-  //   return [];
-  // }
-
-  hidePopup = () => {
-    // const data = {};
-    // this.state.settings.map((ele) => {
-    //   data[ele.key] = ele.value;
-    // });
-    this.props.cancelCB(this.state.settings);
+  hidePopup = (data) => {
+    this.props.cancelCB(data);
   }
 
   updateSettingsObj = (value, setting, type) => {
@@ -100,7 +74,7 @@ class BaseComponentEditModal extends Component {
                 className="editBtn"
                 onClick={() => {
                   this.setState({
-                    showImagePicker: true,
+                    imagePickerData: setting,
                   });
                 }}
               >
@@ -125,7 +99,7 @@ class BaseComponentEditModal extends Component {
   }
 
   render() {
-    const { settings, size, showImagePicker } = this.state;
+    const { settings, size, imagePickerData, editableDataPoints } = this.state;
     return (
       <Modal
         open
@@ -133,7 +107,7 @@ class BaseComponentEditModal extends Component {
         size={size}
         closeOnEscape
         closeOnDimmerClick
-        onClose={this.hidePopup}
+        onClose={() => this.hidePopup(editableDataPoints)}
       >
         <Modal.Header>
           Settings
@@ -169,14 +143,20 @@ class BaseComponentEditModal extends Component {
               })
             }
             {
-              showImagePicker &&
+              imagePickerData &&
                 <ImagePickerModal
                   updateImage={(data) => {
-                    console.log(data); // eslint-disable-line
-                  }}
-                  handleModal={(showImagePicker) => {
+                    const imageLocation = settings.indexOf(imagePickerData);
+                    const newSettings = [...settings];
+                    newSettings[imageLocation].value.image = data;
                     this.setState({
-                      showImagePicker,
+                      settings: newSettings,
+                      imagePickerData: null,
+                    });
+                  }}
+                  handleModal={(imagePickerData) => {
+                    this.setState({
+                      imagePickerData,
                     });
                   }}
                 />
@@ -184,8 +164,8 @@ class BaseComponentEditModal extends Component {
           </Container>
         </Modal.Content>
         <Modal.Actions>
-          <Button className="actionBtns" onClick={this.hidePopup}>Cancel</Button>
-          <Button className="actionBtns" onClick={this.hidePopup} content={'Save'} />
+          <Button className="actionBtns" onClick={() => this.hidePopup(editableDataPoints)}>Cancel</Button>
+          <Button className="actionBtns" onClick={() => this.hidePopup(settings)} content={'Save'} />
         </Modal.Actions>
       </Modal>
     );

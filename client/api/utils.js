@@ -53,7 +53,7 @@ function requestWrapper(method) {
       params = data; // eslint-disable-line
       data = null; // eslint-disable-line
     } else if (data === Object(data)) {
-      data = JSON.stringify(data); // eslint-disable-line
+      // data = JSON.stringify(data); // eslint-disable-line
     } else {
       throw new Error(`XHR invalid, check ${method} on ${url}`);
     }
@@ -61,7 +61,7 @@ function requestWrapper(method) {
     // default params for fetch = method + (Content-Type)
     const headers = {
       'Content-Type': 'application/json; charset=UTF-8',
-      sitename: window.unchainedSite ? window.unchainedSite.sitename : '',
+      // sitename: window.unchainedSite ? window.unchainedSite.sitename : '',
     };
 
     if (url.indexOf('/api/v1/library/getLibraryResults') > -1) {
@@ -90,11 +90,8 @@ function requestWrapper(method) {
     const paramsObj = {
       ...defaults,
       headers: {
-        ...params,
         ...defaults.headers,
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': '*',
-        'Access-Control-Allow-Headers': '*',
+        ...params,
       }
     };
 
@@ -145,10 +142,9 @@ export function resultOK(result) {
   return false;
 }
 
-export async function uploadFile(input, requestParams = {}, url) {
-  if (input && url) {
+export async function uploadFile(requestParams = {}, url) {
+  if (url) {
     const data = new FormData();
-    data.append('event_logo', input.files[0] || '');
     Object.keys(requestParams).map(k => {
       data.append(k, requestParams[k]);
     });

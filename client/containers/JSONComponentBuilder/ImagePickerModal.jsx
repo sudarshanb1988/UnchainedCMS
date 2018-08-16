@@ -1,8 +1,14 @@
 import React from 'react';
-import { Modal, Image, Button } from 'unchained-ui-react';
-
-import ImageUploader from 'react-images-upload';
 import PropTypes from 'prop-types';
+
+import { map } from 'lodash';
+
+import { Modal, Image, Form, Button } from 'unchained-ui-react';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+
+import { getImages, uploadImage } from 'api/auth';
+
+// import 'react-tabs/style/react-tabs.less';
 import './ImagePickerModal.scss';
 
 const data = {
@@ -36,34 +42,86 @@ const data = {
 class ImagePickerModal extends React.Component {
   static propTypes = {
     handleModal: PropTypes.func,
+    updateImage: PropTypes.func,
   };
 
   constructor(props) {
     super(props);
-    this.state = { pictures: [] };
+    this.state = {
+      options: [],
+      images: data,
+      formData: {
+        tags: [],
+      },
+    };
   }
 
-  onDrop = (picture) => {
+  componentDidMount() {
+    this.fetchImages();
+  }
+
+  fetchImages = async () => {
+    const res = await getImages();
     this.setState({
-      pictures: this.state.pictures.concat(picture),
+      images: res,
+    });
+  }
+
+  onSubmit = async (e) => {
+    e.preventDefault();
+    await uploadImage({
+      ...e.value,
     });
   }
 
   renderFileUploader = () => {
+    const { options, formData } = this.state;
+    const tagsValue = map(formData.tags, ({ value }) => (value));
     return (
-      <ImageUploader
-        withIcon={true}
-        buttonText="Choose images"
-        onChange={this.onDrop}
-        imgExtension={['.jpg', '.gif', '.png', '.gif']}
-        maxFileSize={5242880}
-      />
+      <Form onSubmit={(e) => this.onSubmit(e)}>
+        <Form.Input fluid label="Title" placeholder="Title" />
+        <Form.Input fluid type="file" label="Image" placeholder="Image" />
+        <Form.Select
+          search
+          selectOnBlur={false}
+          name="tags"
+          options={options}
+          value={tagsValue}
+          allowAdditions
+          selection
+          multiple
+          onAddItem={(e, { value }) => {
+            const selectedValue = find(options, { id: value });
+            if (!selectedValue) {
+              this.setState({
+                options: [...options, { text: value, value }],
+                formData: {
+                  tags: [...formData.tags, { text: value, value }],
+                }
+              });
+            }
+          }}
+          onChange={(e, { value }) => {
+            const selectedValue = find(options, { value });
+            if (selectedValue) {
+              this.setState({
+                formData: {
+                  tags: [...selectedValue],
+                }
+              });
+            }
+          }}
+        />
+        <Button type="submit">Submit</Button>
+      </Form>
     );
   }
   hidePop = () => {
     this.props.handleModal(false);
   }
   render() {
+    const { updateImage } = this.props;
+    const { images } = this.state; // eslint-disable-line
     return (
       <div>
         <Modal open className="image-picker-modal" onClose={this.hidePop}>
@@ -71,20 +129,34 @@ class ImagePickerModal extends React.Component {
             Change Image
           </Modal.Header>
           <Modal.Content>
-            {
-              data.items.map(({ meta }, title) => {
-                const { file } = meta;
-                return (
-                  <Image lazyload alt={title} src={file} />
-                );
-              })
-            }
-            {this.renderFileUploader()}
+            <Tabs>
+              <TabList>
+                <Tab>Pick Image </Tab>
+                <Tab>Upload Image </Tab>
+              </TabList>
+              <TabPanel>
+                <Image.Group size="small">
+                  {
+                    data.items.map((imageDetails) => {
+                      const { meta: { file }, title } = imageDetails;
+                      return (
+                        <Image
+                          alt={title}
+                          src={file}
+                          onClick={() => {
+                            updateImage(file);
+                          }}
+                        />
+                      );
+                    })
+                  }
+                </Image.Group>
+              </TabPanel>
+              <TabPanel>
+                {this.renderFileUploader()}
+              </TabPanel>
+            </Tabs>
           </Modal.Content>
-          <Modal.Actions>
-            <Button className="actionBtns" onClick={this.hidePopup}>Cancel</Button>
-            <Button className="actionBtns" onClick={this.hidePopup} content={'Save'} />
-          </Modal.Actions>
         </Modal>
       </div>
     );

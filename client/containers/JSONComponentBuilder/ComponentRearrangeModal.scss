@@ -16,7 +16,7 @@
     border: 1px dashed black;
     opacity: 0.5; 
     &.dragging {
-      opacity: 0;
+      // opacity: 0;
       transition: all .25s;
     }
     &.hover {
