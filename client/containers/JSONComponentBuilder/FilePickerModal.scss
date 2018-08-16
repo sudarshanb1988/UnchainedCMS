@@ -1,0 +1,36 @@
+$border-clr: rgba(34, 36, 38, 0.15);
+.ui.modal.image-picker-modal {
+  .ui.image {
+    display: inline-block;
+    cursor: pointer;
+  }
+  .ui.button.tab {
+    background: transparent;
+    padding: 10px;
+    font-size: 20px;
+    border: 1px solid transparent;
+    &.active {
+      font-weight: bolder !important;
+      border-color: $border-clr;
+    }
+  }
+  > .content {
+    min-height: 350px;
+    &.active_tab_1,  &.active_tab_2 {
+      animation-name: opacity;
+      animation-duration: 1s;
+      @keyframes opacity {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    }
+  }
+  .ui.input input {
+    background: transparent;
+    border: 1px solid $border-clr;
+  }
+}
