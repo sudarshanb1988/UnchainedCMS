@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Modal, Container, Input, Button, Image, Grid, Label, Icon } from 'unchained-ui-react';
 import ReactQuill from 'react-quill';
 
-import ImagePickerModal from './ImagePickerModal';
+import FilePickerModal from './FilePickerModal';
 
 import './BaseComponentEditModal.scss';
 
@@ -144,7 +144,7 @@ class BaseComponentEditModal extends Component {
             }
             {
               imagePickerData &&
-                <ImagePickerModal
+                <FilePickerModal
                   updateImage={(data) => {
                     const imageLocation = settings.indexOf(imagePickerData);
                     const newSettings = [...settings];
