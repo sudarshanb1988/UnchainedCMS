@@ -17,6 +17,7 @@ const config = {
   // local overides, if any
   local: {
     apiUrl: 'http://192.168.3.125:9000',
+    dataAPIUrl: 'http://192.168.3.125:9000/api/v2',
     mockApiUrl: 'https://bmo-economics-qa-mockapi.galepartners.com/mock-api',
     elasticSearchUrl: 'https://bmo-economics-osqa-ui.galepartners.com/search',
     subDomain: window.location.hostname

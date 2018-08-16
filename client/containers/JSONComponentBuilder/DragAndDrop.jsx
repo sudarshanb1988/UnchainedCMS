@@ -62,12 +62,12 @@ const DragAndDropComponent = flow(
   DropTarget(
     'DragAndDrop',
     {
-      drop(targetProps, monitor) {
-        const prevProps = monitor.getItem();
-        targetProps.onDropComponent(prevProps.data);
+      drop(targetProps) {
         return targetProps;
       },
-      hover(props) {
+      hover(props, monitor) {
+        const prevProps = monitor.getItem();
+        props.onDropComponent(prevProps.data);
         return {
           ...props,
           isHover: true,
