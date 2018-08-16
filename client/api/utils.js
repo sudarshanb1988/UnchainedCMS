@@ -61,21 +61,15 @@ function requestWrapper(method) {
     // default params for fetch = method + (Content-Type)
     const headers = {
       'Content-Type': 'application/json; charset=UTF-8',
-      // sitename: window.unchainedSite ? window.unchainedSite.sitename : '',
     };
 
-    if (url.indexOf('/api/v1/library/getLibraryResults') > -1) {
-      headers['Cache-Control'] = 'no-cache';
-      headers.Pragma = 'no-cache';
-      headers.Expires = -1;
-    }
 
     const defaults = {
       method,
       headers
     };
     const shouldEscapeToken = url.match(/^http(s)?:\/\/(.)*\/(search|cms-api)\/*/gi);
-    if (!shouldEscapeToken || (url.indexOf('/api/v1/user/search_user') > -1) || (url.indexOf('/api/v1/data_boutique/getBMORedFile/') > -1)) {
+    if (!shouldEscapeToken) {
       const token = getLocalToken();
 
       if (token) {

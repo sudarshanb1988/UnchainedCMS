@@ -2,17 +2,31 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { isEqual } from 'lodash';
+import { connect } from 'react-redux';
 import {
   Message,
 } from 'unchained-ui-react';
 
+import {
+  unchainedSelector,
+} from 'store/selectors';
+
+import {
+  USER_AUTH_VERIFY_UNCHAINED_TOKEN
+} from 'store/actions';
+
+import { getParameterByName } from 'utils';
+
 import ContainerEditor from './ContainerEditor';
 import ComponentEditor from './ComponentEditor';
+
 
 class JSONComponentBuilder extends Component {
   static propTypes = {
     components: PropTypes.object,
     jsonObj: PropTypes.object,
+    isAuthorized: PropTypes.bool,
+    verifyUnchainedToken: PropTypes.func
   };
 
   constructor(props) {
@@ -55,7 +69,7 @@ class JSONComponentBuilder extends Component {
           tag = <meta key={Math.random()} name={'description'} content={value} />;
           break;
         default:
-          // tag = <meta key={Math.random()} name={key} content={value} />;
+        // tag = <meta key={Math.random()} name={key} content={value} />;
           break;
       }
 
@@ -85,6 +99,7 @@ class JSONComponentBuilder extends Component {
   developComponents(jsonObj) {
     const {
       components,
+      isAuthorized
     } = this.props;
 
     return jsonObj.map((item) => {
@@ -93,14 +108,15 @@ class JSONComponentBuilder extends Component {
       const Element = components[componentName];
 
       if (Element) {
-        const children = this.buildChildComponents(item.value.children, item.isEditable);
+        const isElementEditable = isAuthorized && item.isEditable;
+        const children = this.buildChildComponents(item.value.children, isElementEditable);
         const props = JSON.parse(JSON.stringify(item.value.children));
         delete props.children;
 
         if (props.wrapperComponent === true) {
           return children;
         }
-        if (item.isEditable) {
+        if (isElementEditable) {
           return (
             <ComponentEditor componentData={props} jsonObj={this.state.jsonObj} updateJsonData={this.updateJsonData}>
               <Element data={props}>{children}</Element>
@@ -126,6 +142,13 @@ class JSONComponentBuilder extends Component {
 
   updateJsonData = (jsonData) => this.setState({ jsonObj: jsonData })
 
+  componentDidMount() {
+    const token = getParameterByName('token');
+    if (token) {
+      this.props.verifyUnchainedToken(token);
+    }
+  }
+
   render() {
     const {
       jsonObj,
@@ -141,4 +164,14 @@ class JSONComponentBuilder extends Component {
   }
 }
 
-export default JSONComponentBuilder;
+const mapStateToProps = (state) => ({
+  isAuthorized: unchainedSelector.isUnchainedTokenValid(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  verifyUnchainedToken: (token) => {
+    dispatch(USER_AUTH_VERIFY_UNCHAINED_TOKEN(token));
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(JSONComponentBuilder);

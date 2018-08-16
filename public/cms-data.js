@@ -244,7 +244,6 @@ window.unchainedSite = {
               }
             ]
           },
-          isEditable: true,
           "type": "FeaturedResearch",
           "id": "466130e3-99e2-447e-bf72-dab678fbdfe2"
         },
@@ -381,7 +380,7 @@ window.unchainedSite = {
             ]
           },
           "type": "GICSection",
-          "id": "8a23ace1-7734-4113-8d70-5e87118396a5"
+          "id": "8a23ace1-7734-4113-8d70-5e87118396a5",
         }
       ],
       "id": 4
