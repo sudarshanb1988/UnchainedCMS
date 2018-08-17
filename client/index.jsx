@@ -25,13 +25,13 @@ const renderApp = () => {
   if (isDev) {
     const lintResult = require('../dumbledore-lint.json');
     const hasLintErrors = lintResult && Object.keys(lintResult.messages).length > 0;
-
-    if (hasLintErrors) {
-      return (
-        <DumbledoreLintContainer errors={Object.values(lintResult.messages)} />
-      );
-    }
+    if (hasLintErrors) return <DumbledoreLintContainer errors={Object.values(lintResult.messages)} />;
   }
+
+  window.onerror = (message, source, lineno, colno, error) => {
+    console.log(message, source, lineno, colno, error); // eslint-disable-line
+  };
+
   return (
     <AppContainer>
       <Provider store={store} key={Math.random()}>
