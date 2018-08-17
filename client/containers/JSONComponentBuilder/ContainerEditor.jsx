@@ -14,6 +14,7 @@ class ContainerEditor extends React.Component {
     jsonObj: PropTypes.object,
     componentData: PropTypes.array,
     children: PropTypes.object,
+    updateJsonData: PropTypes.func
   };
 
   constructor(props) {
@@ -37,6 +38,7 @@ class ContainerEditor extends React.Component {
       componentData,
       jsonObj,
       children,
+      updateJsonData,
     } = this.props;
 
     return (
