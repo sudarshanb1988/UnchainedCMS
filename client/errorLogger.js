@@ -5,7 +5,7 @@ window.onerror = async (message, filename, lineno, colno, error) => {
     Filename: filename,
     LineNumber: lineno,
     Column: colno,
-    Message: error.message,
+    Message: message,
     StackTrace: error.stack,
     UserAgent: window.navigator.appVersion
   };

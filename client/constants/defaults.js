@@ -1,4 +1,5 @@
 export const FILE_TYPES = {
-  IMAGES: 'IMAGES'
+  IMAGES: 'IMAGES',
+  DOCUMENTS: 'DOCUMENTS'
 };
 

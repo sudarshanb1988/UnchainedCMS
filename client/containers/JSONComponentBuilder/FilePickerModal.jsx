@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { map, debounce, filter, escapeRegExp } from 'lodash';
-import { Modal, Image, Form, Button, Input, Loader, Dimmer } from 'unchained-ui-react';
+import { Modal, Image, Form, Button, Input, Loader, Dimmer, Icon, Card } from 'unchained-ui-react';
 
 // import { ReactPagination } from 'pagination-with-react';
 import { getImages, uploadImage } from 'api/auth';
@@ -29,7 +29,7 @@ class FilePickerModal extends React.Component {
     super(props);
     this.state = {
       options: [],
-      images: data.items,
+      files: data.images.items,
       tab: this.TAB_TYPES.FILE_PREVIEW,
       isLoading: false,
       formData: {
@@ -39,27 +39,27 @@ class FilePickerModal extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchImages();
+    // this.fetchImages();
   }
 
   changeTab = (tab) => {
     this.setState({
       ...this.state,
       tab,
-      images: data.items,
+      files: data.images.items,
     });
   }
 
   fetchImages = async () => {
     const res = await getImages();
     this.setState({
-      images: res,
+      files: res,
     });
   }
 
 
   hidePop = () => {
-    this.props.handleModal(false);
+    this.props.handleModal();
   }
 
   handleSearchChange = (e, { value }) => {
@@ -68,17 +68,17 @@ class FilePickerModal extends React.Component {
     setTimeout(() => {
       if (value.length < 1) {
         this.setState({
-          images: data.items,
+          files: data.images.items,
           isLoading: false,
         });
         return;
       }
       const re = new RegExp(escapeRegExp(value), 'i');
       const isMatch = ({ meta: { tags } }) => filter(tags, tag => re.test(tag)).length > 0;
-      const images = filter(data.items, isMatch);
+      const files = filter(data.images.items, isMatch);
       this.setState({
         isLoading: false,
-        images,
+        files,
       });
     }, 300);
   }
@@ -137,7 +137,7 @@ class FilePickerModal extends React.Component {
 
   render() {
     const { updateImage, fileType } = this.props;
-    const { images, tab, isLoading } = this.state; // eslint-disable-line
+    const { files, tab, isLoading } = this.state; // eslint-disable-line
     return (
       <div>
         <Modal open className="image-picker-modal" onClose={this.hidePop}>
@@ -160,7 +160,6 @@ class FilePickerModal extends React.Component {
               tab === this.TAB_TYPES.FILE_PREVIEW &&
               <div>
                 <Input
-                  category
                   fluid
                   loading={isLoading}
                   icon="search"
@@ -175,14 +174,14 @@ class FilePickerModal extends React.Component {
                   </Dimmer>
                 }
                 {
-                  !isLoading && images && images.length === 0 && <h1> No files are found </h1>
+                  !isLoading && files && files.length === 0 && <h1> No files are found </h1>
                 }
                 <div className="file-container">
                   {
                     fileType === FILE_TYPES.IMAGES &&
                       <Image.Group size="small">
                         {
-                          !isLoading && images.map((imageDetails) => {
+                          !isLoading && files.map((imageDetails) => {
                             const { meta: { file }, title } = imageDetails;
                             return (
                               <Image
@@ -196,6 +195,29 @@ class FilePickerModal extends React.Component {
                           })
                         }
                       </Image.Group>
+                  }
+                  {
+                    fileType === FILE_TYPES.DOCUMENTS &&
+                      <Card.Group size="small">
+                        {
+                          !isLoading && files.map((imageDetails) => {
+                            const { meta: { file }, title } = imageDetails;
+                            return (
+                              <Card>
+                                <Card.Content>
+                                  <Icon
+                                    name="file outline"
+                                    onClick={() => {
+                                      updateImage(file);
+                                    }}
+                                  />
+                                  {title}
+                                </Card.Content>
+                              </Card>
+                            );
+                          })
+                        }
+                      </Card.Group>
                   }
                 </div>
               </div>
