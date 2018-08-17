@@ -5,42 +5,19 @@ import classNames from 'classnames';
 import { map, debounce, filter, escapeRegExp } from 'lodash';
 import { Modal, Image, Form, Button, Input, Loader, Dimmer } from 'unchained-ui-react';
 
+// import { ReactPagination } from 'pagination-with-react';
 import { getImages, uploadImage } from 'api/auth';
+import { FILE_TYPES } from 'constants/defaults';
 
 import './FilePickerModal.scss';
 
-const data = {
-  meta: {
-    total_count: 2,
-  },
-  items: [
-    {
-      id: 22,
-      meta: {
-        type: 'wagtailimages.Image',
-        detail_url: 'http://localhost/api/v2/images/22/',
-        tags: ['avinash', 'super', 'sup'],
-        file: 'https://dummyimage.com/100x100/e8d6e8/000fde.png&text=avinash,super,sup',
-      },
-      title: 'test image2'
-    },
-    {
-      id: 23,
-      meta: {
-        type: 'wagtailimages.Image',
-        detail_url: 'http://localhost/api/v2/images/23/',
-        tags: ['sup', 's', 'su'],
-        file: 'https://dummyimage.com/100x100/e8d6e8/000fde.png&text=sup,s,su',
-      },
-      title: 'Screen Shot 2018-07-19 at 10.33.58 AM.png'
-    }
-  ]
-};
+const data = require('./dummy.json');
 
 class FilePickerModal extends React.Component {
   static propTypes = {
     handleModal: PropTypes.func,
     updateImage: PropTypes.func,
+    fileType: PropTypes.string,
   };
 
   TAB_TYPES = {
@@ -159,7 +136,7 @@ class FilePickerModal extends React.Component {
   }
 
   render() {
-    const { updateImage } = this.props;
+    const { updateImage, fileType } = this.props;
     const { images, tab, isLoading } = this.state; // eslint-disable-line
     return (
       <div>
@@ -198,24 +175,29 @@ class FilePickerModal extends React.Component {
                   </Dimmer>
                 }
                 {
-                  !isLoading && images.length === 0 && <h1> No files are found </h1>
+                  !isLoading && images && images.length === 0 && <h1> No files are found </h1>
                 }
-                <Image.Group size="small">
+                <div className="file-container">
                   {
-                    !isLoading && images.map((imageDetails) => {
-                      const { meta: { file }, title } = imageDetails;
-                      return (
-                        <Image
-                          alt={title}
-                          src={file}
-                          onClick={() => {
-                            updateImage(file);
-                          }}
-                        />
-                      );
-                    })
+                    fileType === FILE_TYPES.IMAGES &&
+                      <Image.Group size="small">
+                        {
+                          !isLoading && images.map((imageDetails) => {
+                            const { meta: { file }, title } = imageDetails;
+                            return (
+                              <Image
+                                alt={title}
+                                src={file}
+                                onClick={() => {
+                                  updateImage(file);
+                                }}
+                              />
+                            );
+                          })
+                        }
+                      </Image.Group>
                   }
-                </Image.Group>
+                </div>
               </div>
             }
             {

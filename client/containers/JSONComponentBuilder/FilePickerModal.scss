@@ -33,4 +33,9 @@ $border-clr: rgba(34, 36, 38, 0.15);
     background: transparent;
     border: 1px solid $border-clr;
   }
+  .file-container {
+    .ui.small.images {
+      text-align: center;
+    }
+  }
 }

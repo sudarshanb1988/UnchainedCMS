@@ -112,3 +112,7 @@ export async function uploadImage(data) {
 export async function getImages() {
   return get(`${dataAPIUrl}/images`);
 }
+
+export async function errorLogger(data) {
+  return post(`${apiUrl}/log`, data);
+}

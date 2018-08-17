@@ -34,6 +34,10 @@ class JSONComponentBuilder extends Component {
     }
   }
 
+  componentDidCatch(error, errorInfo) {
+    console.log(this, error, errorInfo); // eslint-disable-line
+  }
+
   buildSEOComponents = (seoObj = {}) => {
     return Object.keys(seoObj).map((k, i) => {
       const key = k.toLowerCase();

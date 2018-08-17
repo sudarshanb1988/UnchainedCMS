@@ -3,7 +3,6 @@ import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import { env } from 'config';
 import { DumbledoreLintContainer } from 'containers';
-import Perf from 'react-addons-perf';
 import { ConnectedRouter } from 'react-router-redux';
 import { Provider } from 'react-redux';
 import configureStore from 'store/configure';
@@ -17,9 +16,6 @@ const history = createBrowserHistory();
 const store = configureStore({}, history);
 const isDev = env === 'local';
 
-if (isDev) {
-  window.Perf = Perf;
-}
 
 const renderApp = () => {
   if (isDev) {
@@ -27,11 +23,6 @@ const renderApp = () => {
     const hasLintErrors = lintResult && Object.keys(lintResult.messages).length > 0;
     if (hasLintErrors) return <DumbledoreLintContainer errors={Object.values(lintResult.messages)} />;
   }
-
-  window.onerror = (message, source, lineno, colno, error) => {
-    console.log(message, source, lineno, colno, error); // eslint-disable-line
-  };
-
   return (
     <AppContainer>
       <Provider store={store} key={Math.random()}>
@@ -48,3 +39,7 @@ render(renderApp(), root);
 if (module.hot) {
   module.hot.accept();
 }
+
+// error logger
+
+require('./errorLogger');
