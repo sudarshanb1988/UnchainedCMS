@@ -17,15 +17,18 @@ class FileGallary extends React.Component {
   constructor(props) {
     super(props);
     this.IMAGES_LENGTH = props.images.length;
+    this.NO_IMAGES = 10;
     this.PAGES_PER_SCREEEN = 10;
+    this.TOTAL_NO_PAGES = Math.ceil(this.IMAGES_LENGTH / this.NO_IMAGES) - 1;
     this.state = {
-      currentPageNumber: 1,
+      currentPageNumber: 0,
     };
   }
 
   render() {
     const { images, updateImage } = this.props;
-    const paginatedImages = images.slice(this.IMAGES_LENGTH, 6);
+    const paginatedImages = images.slice(currentPageNumber * this.NO_IMAGES, (currentPageNumber * this.NO_IMAGES) + this.NO_IMAGES);
+    if (paginatedImages.length === 0) return null;
     return (
       <Card.Group size="small">
         {
