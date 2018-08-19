@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { map, debounce, filter, escapeRegExp } from 'lodash';
-import { Modal, Image, Form, Button, Input, Loader, Dimmer, Icon, Card } from 'unchained-ui-react';
+import { Modal, Form, Button, Input, Loader, Dimmer } from 'unchained-ui-react';
 
-// import { ReactPagination } from 'pagination-with-react';
 import { getImages, uploadImage } from 'api/auth';
 import { FILE_TYPES } from 'constants/defaults';
+
+import ImageGallary from './ImageGallary';
+import FileGallary from './FileGallary';
 
 import './FilePickerModal.scss';
 
@@ -179,45 +181,11 @@ class FilePickerModal extends React.Component {
                 <div className="file-container">
                   {
                     fileType === FILE_TYPES.IMAGES &&
-                      <Image.Group size="small">
-                        {
-                          !isLoading && files.map((imageDetails) => {
-                            const { meta: { file }, title } = imageDetails;
-                            return (
-                              <Image
-                                alt={title}
-                                src={file}
-                                onClick={() => {
-                                  updateImage(file);
-                                }}
-                              />
-                            );
-                          })
-                        }
-                      </Image.Group>
+                    <ImageGallary images={files} updateImage={(file) => updateImage(file)} />
                   }
                   {
                     fileType === FILE_TYPES.DOCUMENTS &&
-                      <Card.Group size="small">
-                        {
-                          !isLoading && files.map((imageDetails) => {
-                            const { meta: { file }, title } = imageDetails;
-                            return (
-                              <Card>
-                                <Card.Content>
-                                  <Icon
-                                    name="file outline"
-                                    onClick={() => {
-                                      updateImage(file);
-                                    }}
-                                  />
-                                  {title}
-                                </Card.Content>
-                              </Card>
-                            );
-                          })
-                        }
-                      </Card.Group>
+                    <FileGallary images={files} updateImage={(file) => updateImage(file)} />
                   }
                 </div>
               </div>

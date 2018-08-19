@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  JSONComponentBuilder,
-} from 'containers';
+import JSONComponentBuilder from '../JSONComponentBuilder/JSONComponentBuilder';
 
 const PageBuilder = (props) => {
   const {
@@ -28,7 +26,6 @@ const PageBuilder = (props) => {
   }
 
   const components = require('components');
-
   return <JSONComponentBuilder components={components} jsonObj={jsonObj} />;
 };
 
