@@ -8,6 +8,18 @@ import Pagination from './Pagination';
 
 
 class FileGallary extends React.Component {
+
+  static getDerivedStateFromProps(nextProps, state) {
+    if (nextProps.images !== state.images) {
+      return {
+        ...state,
+        currentPageNumber: 1,
+        images: nextProps.images,
+      }
+    }
+    return null;
+  }
+
   static propTypes = {
     images: PropTypes.array,
     updateImage: PropTypes.func,

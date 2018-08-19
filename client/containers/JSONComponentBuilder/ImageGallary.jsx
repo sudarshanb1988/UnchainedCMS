@@ -14,6 +14,16 @@ class ImageGallary extends React.Component {
     // isLoading: PropTypes.boolean,
   };
 
+  static getDerivedStateFromProps(nextProps, state) {
+    if (nextProps.images !== state.images) {
+      return {
+        ...state,
+        currentPageNumber: 1,
+        images: nextProps.images,
+      }
+    }
+    return null;
+  }
   constructor(props) {
     super(props);
     this.IMAGES_LENGTH = props.images.length;
@@ -22,12 +32,13 @@ class ImageGallary extends React.Component {
     this.TOTAL_NO_PAGES = Math.ceil(this.IMAGES_LENGTH / this.NO_IMAGES) - 1;
     this.state = {
       currentPageNumber: 1,
+      images: props.images,
     };
   }
 
   render() {
-    const { images, updateImage } = this.props;
-    const { currentPageNumber } = this.state;
+    const { updateImage } = this.props;
+    const { currentPageNumber, images } = this.state;
     const pageNumber = currentPageNumber === 1 ? 0 : currentPageNumber;
     const paginatedImages = images.slice(pageNumber * this.NO_IMAGES, (pageNumber * this.NO_IMAGES) + this.NO_IMAGES);
     if (paginatedImages.length === 0) return null;
