@@ -3,12 +3,20 @@
     text-align: center;
     margin-top: 30px;
     .ui.button {
-      padding: 5px 8px;
       color: black;
-      border-radius: 0;
+      border-radius: 1px;
       background: white;
+      border: 1px solid;
+      width: 30px;
+      padding: 5px 0;
+      text-align: center;
+      margin: 0px 5px;
       &.active {
         font-weight: bold;
+        background: #8080804f;
+      }
+      i.icon {
+        margin: 0;
       }
     }
   }

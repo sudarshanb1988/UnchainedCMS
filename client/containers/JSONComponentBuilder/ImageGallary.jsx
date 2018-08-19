@@ -21,14 +21,15 @@ class ImageGallary extends React.Component {
     this.PAGES_PER_SCREEEN = 10;
     this.TOTAL_NO_PAGES = Math.ceil(this.IMAGES_LENGTH / this.NO_IMAGES) - 1;
     this.state = {
-      currentPageNumber: 0,
+      currentPageNumber: 1,
     };
   }
 
   render() {
     const { images, updateImage } = this.props;
     const { currentPageNumber } = this.state;
-    const paginatedImages = images.slice(currentPageNumber * this.NO_IMAGES, (currentPageNumber * this.NO_IMAGES) + this.NO_IMAGES);
+    const pageNumber = currentPageNumber === 1 ? 0 : currentPageNumber;
+    const paginatedImages = images.slice(pageNumber * this.NO_IMAGES, (pageNumber * this.NO_IMAGES) + this.NO_IMAGES);
     if (paginatedImages.length === 0) return null;
     return (
       <Pagination

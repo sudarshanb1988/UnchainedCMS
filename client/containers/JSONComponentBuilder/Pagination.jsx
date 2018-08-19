@@ -89,11 +89,11 @@ class Pagination extends React.Component {
         <div className="buttons-container">
           <div activeIndex={currentActiveIndex} pagination>
             {prefix}
-            { currentActiveIndex > (midPoint + 1) && <Button co icon className="previous-btn" onClick={() => onPageButtonClick(1)}> {icons.leftMost}  </Button> }
-            { currentActiveIndex > (midPoint + 1) && <Button icon className="previous-btn" onClick={() => onPageButtonClick(currentActiveIndex - 1)}> {icons.left}  </Button> }
+            { currentActiveIndex > (midPoint + 1) && <Button className="previous-btn" onClick={() => onPageButtonClick(1)}> {icons.leftMost}  </Button> }
+            { currentActiveIndex > (midPoint + 1) && <Button className="previous-btn" onClick={() => onPageButtonClick(currentActiveIndex - 1)}> {icons.left}  </Button> }
             {ButtonsList}
-            { !((totalNumberOfPages - midPoint) < currentActiveIndex) && <Button icon className="next-btn" onClick={() => onPageButtonClick(currentActiveIndex + 1)}> {icons.right} </Button> }
-            { !((totalNumberOfPages - midPoint) < currentActiveIndex) && <Button icon className="next-btn" onClick={() => onPageButtonClick(totalNumberOfPages)}>  {icons.rightMost} </Button> }
+            { !((totalNumberOfPages - midPoint) < currentActiveIndex) && <Button className="next-btn" onClick={() => onPageButtonClick(currentActiveIndex + 1)}> {icons.right} </Button> }
+            { !((totalNumberOfPages - midPoint) < currentActiveIndex) && <Button className="next-btn" onClick={() => onPageButtonClick(totalNumberOfPages)}>  {icons.rightMost} </Button> }
             {suffix}
           </div>
         </div>
