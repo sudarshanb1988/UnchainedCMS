@@ -3,44 +3,23 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { map, debounce, filter, escapeRegExp } from 'lodash';
-import { Modal, Image, Form, Button, Input, Loader, Dimmer } from 'unchained-ui-react';
+import { Modal, Form, Button, Input, Loader, Dimmer } from 'unchained-ui-react';
 
 import { getImages, uploadImage } from 'api/auth';
+import { FILE_TYPES } from 'constants/defaults';
+
+import ImageGallary from './ImageGallary';
+import FileGallary from './FileGallary';
 
 import './FilePickerModal.scss';
 
-const data = {
-  meta: {
-    total_count: 2,
-  },
-  items: [
-    {
-      id: 22,
-      meta: {
-        type: 'wagtailimages.Image',
-        detail_url: 'http://localhost/api/v2/images/22/',
-        tags: ['avinash', 'super', 'sup'],
-        file: 'https://dummyimage.com/100x100/e8d6e8/000fde.png&text=avinash,super,sup',
-      },
-      title: 'test image2'
-    },
-    {
-      id: 23,
-      meta: {
-        type: 'wagtailimages.Image',
-        detail_url: 'http://localhost/api/v2/images/23/',
-        tags: ['sup', 's', 'su'],
-        file: 'https://dummyimage.com/100x100/e8d6e8/000fde.png&text=sup,s,su',
-      },
-      title: 'Screen Shot 2018-07-19 at 10.33.58 AM.png'
-    }
-  ]
-};
+const data = require('./dummy.json');
 
 class FilePickerModal extends React.Component {
   static propTypes = {
     handleModal: PropTypes.func,
     updateImage: PropTypes.func,
+    fileType: PropTypes.string,
   };
 
   TAB_TYPES = {
@@ -52,7 +31,7 @@ class FilePickerModal extends React.Component {
     super(props);
     this.state = {
       options: [],
-      images: data.items,
+      files: data.images.items,
       tab: this.TAB_TYPES.FILE_PREVIEW,
       isLoading: false,
       formData: {
@@ -62,27 +41,27 @@ class FilePickerModal extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchImages();
+    // this.fetchImages();
   }
 
   changeTab = (tab) => {
     this.setState({
       ...this.state,
       tab,
-      images: data.items,
+      files: data.images.items,
     });
   }
 
   fetchImages = async () => {
     const res = await getImages();
     this.setState({
-      images: res,
+      files: res,
     });
   }
 
 
   hidePop = () => {
-    this.props.handleModal(false);
+    this.props.handleModal();
   }
 
   handleSearchChange = (e, { value }) => {
@@ -91,17 +70,17 @@ class FilePickerModal extends React.Component {
     setTimeout(() => {
       if (value.length < 1) {
         this.setState({
-          images: data.items,
+          files: data.images.items,
           isLoading: false,
         });
         return;
       }
       const re = new RegExp(escapeRegExp(value), 'i');
       const isMatch = ({ meta: { tags } }) => filter(tags, tag => re.test(tag)).length > 0;
-      const images = filter(data.items, isMatch);
+      const files = filter(data.images.items, isMatch);
       this.setState({
         isLoading: false,
-        images,
+        files,
       });
     }, 300);
   }
@@ -159,8 +138,8 @@ class FilePickerModal extends React.Component {
   }
 
   render() {
-    const { updateImage } = this.props;
-    const { images, tab, isLoading } = this.state; // eslint-disable-line
+    const { updateImage, fileType } = this.props;
+    const { files, tab, isLoading } = this.state; // eslint-disable-line
     return (
       <div>
         <Modal open className="image-picker-modal" onClose={this.hidePop}>
@@ -183,7 +162,6 @@ class FilePickerModal extends React.Component {
               tab === this.TAB_TYPES.FILE_PREVIEW &&
               <div>
                 <Input
-                  category
                   fluid
                   loading={isLoading}
                   icon="search"
@@ -198,24 +176,18 @@ class FilePickerModal extends React.Component {
                   </Dimmer>
                 }
                 {
-                  !isLoading && images.length === 0 && <h1> No files are found </h1>
+                  !isLoading && files && files.length === 0 && <h1> No files are found </h1>
                 }
-                <Image.Group size="small">
+                <div className="file-container">
                   {
-                    !isLoading && images.map((imageDetails) => {
-                      const { meta: { file }, title } = imageDetails;
-                      return (
-                        <Image
-                          alt={title}
-                          src={file}
-                          onClick={() => {
-                            updateImage(file);
-                          }}
-                        />
-                      );
-                    })
+                    fileType === FILE_TYPES.IMAGES &&
+                    <ImageGallary images={files} updateImage={(file) => updateImage(file)} />
                   }
-                </Image.Group>
+                  {
+                    fileType === FILE_TYPES.DOCUMENTS &&
+                    <FileGallary images={files} updateImage={(file) => updateImage(file)} />
+                  }
+                </div>
               </div>
             }
             {

@@ -14,7 +14,7 @@ class ContainerEditor extends React.Component {
     jsonObj: PropTypes.object,
     componentData: PropTypes.array,
     children: PropTypes.object,
-    updateJsonData: PropTypes.func
+    // updateJsonData: PropTypes.func
   };
 
   constructor(props) {
@@ -23,6 +23,10 @@ class ContainerEditor extends React.Component {
       componentRearrangeData: null,
       componentType: null,
     };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log(this, error, errorInfo); // eslint-disable-line
   }
 
   showModal = (componentData) => this.setState({ componentRearrangeData: componentData, componentType: componentData[0].type });
@@ -38,7 +42,7 @@ class ContainerEditor extends React.Component {
       componentData,
       jsonObj,
       children,
-      updateJsonData,
+      // updateJsonData,
     } = this.props;
 
     return (

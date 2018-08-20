@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { isEqual } from 'lodash';
-import { Modal, Container, Input, Button, Image, Grid, Label, Icon } from 'unchained-ui-react';
+
+
 import ReactQuill from 'react-quill';
+import { Modal, Container, Input, Button, Image, Grid, Label, Icon } from 'unchained-ui-react';
+
+import { FILE_TYPES } from 'constants/defaults';
 
 import FilePickerModal from './FilePickerModal';
 
@@ -145,6 +148,7 @@ class BaseComponentEditModal extends Component {
             {
               imagePickerData &&
                 <FilePickerModal
+                  fileType={FILE_TYPES.IMAGES}
                   updateImage={(data) => {
                     const imageLocation = settings.indexOf(imagePickerData);
                     const newSettings = [...settings];
