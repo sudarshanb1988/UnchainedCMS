@@ -8,6 +8,7 @@ import {
 
 import ContainerEditor from './ContainerEditor';
 import ComponentEditor from './ComponentEditor';
+import DragAndDrop from './DragAndDrop';
 
 class JSONComponentBuilder extends Component {
   static propTypes = {
@@ -78,9 +79,28 @@ class JSONComponentBuilder extends Component {
     }
     if (isEditable) {
       return (
-        <ContainerEditor componentData={jsonObj} jsonObj={this.state.jsonObj} updateJsonData={this.updateJsonData}>
-          {this.developComponents(jsonObj)}
-        </ContainerEditor>
+        <DragAndDrop
+          data={jsonObj}
+          onDrag={(isDragging) => { this.setState({ isDragging }); }}
+          onDropComponent={(data) => {
+            const cmsData = this.state.jsonObj.body;
+            const newComponetData = [...cmsData];
+            const totalData = cmsData.find((ele) => data[0].parent_id === ele.id);
+            const totalEleData = cmsData.find((ele) => jsonObj[0].parent_id === ele.id);
+            const dataLocation = cmsData.indexOf(totalData);
+            const eleLocation = cmsData.indexOf(totalEleData);
+            newComponetData[dataLocation] = totalEleData;
+            newComponetData[eleLocation] = totalData;
+            this.updateJsonData({
+              ...this.state.jsonObj,
+              body: [...newComponetData],
+            });
+          }}
+        >
+          <ContainerEditor componentData={jsonObj} jsonObj={this.state.jsonObj} updateJsonData={this.updateJsonData}>
+            {this.developComponents(jsonObj)}
+          </ContainerEditor>
+        </DragAndDrop>
       );
     }
     return this.developComponents(jsonObj);

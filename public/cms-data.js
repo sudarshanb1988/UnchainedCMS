@@ -380,6 +380,7 @@ window.unchainedSite = {
               }
             ]
           },
+          isEditable: true,
           "type": "GICSection",
           "id": "8a23ace1-7734-4113-8d70-5e87118396a5"
         }
