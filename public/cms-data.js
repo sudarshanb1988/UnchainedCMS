@@ -308,8 +308,144 @@ window.unchainedSite = {
           isEditable: true,
           "type": "FeaturedResearch",
           "id": "466130e3-99e2-447e-bf72-dab678fbdfe2"
+        },
+        {
+          "value": {
+            "className": {
+              "text": "GIC section Main Class Name"
+            },
+            "children": [
+              {
+                "value": {
+                  "richText": '<div class="rich-text"><h1 style="text-align: center;">About BMO Research</h1><p style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.<br/></p></div>'
+                },
+                "type": "UnchainedCtrlRichTextBlock",
+                "parent_id": "8a23ace1-7734-4113-8d70-5e87118396a5",
+                "id": "40f4292f-b1ad-4411-ba22-c069cb770341"
+              },
+              {
+                "value": {
+                  "className": {
+                    "text": "gics 1"
+                  },
+                  "children": [
+                    {
+                      "value": {
+                        "image": 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/1.png',
+                        "altText": "image"
+                      },
+                      "type": "UnchainedCtrlImageBlock",
+                      "parent_id": "076f8ee5-bfb6-4ab3-92f1-66a8487114e9",
+                      "id": "189a0956-8d4b-4fe0-8f38-48ea9b03daf1"
+                    },
+                    {
+                      "value": {
+                        "text": "Energy"
+                      },
+                      "type": "UnchainedCtrlCharBlock",
+                      "parent_id": "076f8ee5-bfb6-4ab3-92f1-66a8487114e9",
+                      "id": "0e3832a4-aa47-4fe3-bb98-42db2dbee6d0"
+                    }
+                  ]
+                },
+                "type": "GICIcon",
+                "parent_id": "8a23ace1-7734-4113-8d70-5e87118396a5",
+                "id": "076f8ee5-bfb6-4ab3-92f1-66a8487114e9"
+              },
+              {
+                "value": {
+                  "className": {
+                    "text": "gics 2"
+                  },
+                  "children": [
+                    {
+                      "value": {
+                        "image": 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/2.png',
+                        "altText": "image"
+                      },
+                      "type": "UnchainedCtrlImageBlock",
+                      "parent_id": "ae35518f-27cb-46d2-9bd3-aca633f22680",
+                      "id": "be0b6333-7b4e-4006-ae72-019ab53362c8"
+                    },
+                    {
+                      "value": {
+                        "text": "Materials"
+                      },
+                      "type": "UnchainedCtrlCharBlock",
+                      "parent_id": "ae35518f-27cb-46d2-9bd3-aca633f22680",
+                      "id": "e0b70506-a760-4005-840a-96de5b31a3ab"
+                    }
+                  ]
+                },
+                "type": "GICIcon",
+                "parent_id": "8a23ace1-7734-4113-8d70-5e87118396a5",
+                "id": "ae35518f-27cb-46d2-9bd3-aca633f22680"
+              },
+              {
+                "value": {
+                  "className": {
+                    "text": "gics 3"
+                  },
+                  "children": [
+                    {
+                      "value": {
+                        "image": 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/3.png',
+                        "altText": "image"
+                      },
+                      "type": "UnchainedCtrlImageBlock",
+                      "parent_id": "221abcca-be9e-41e8-8f45-08097d807807",
+                      "id": "534df3a1-bdf4-4aba-b8a2-c1b73cddc30e"
+                    },
+                    {
+                      "value": {
+                        "text": "Industrials"
+                      },
+                      "type": "UnchainedCtrlCharBlock",
+                      "parent_id": "221abcca-be9e-41e8-8f45-08097d807807",
+                      "id": "c3a305ee-8b44-4e29-9881-eba7acb64fc5"
+                    }
+                  ]
+                },
+                "type": "GICIcon",
+                "parent_id": "8a23ace1-7734-4113-8d70-5e87118396a5",
+                "id": "221abcca-be9e-41e8-8f45-08097d807807"
+              },
+              {
+                "value": {
+                  "className": {
+                    "text": "gics 4"
+                  },
+                  "children": [
+                    {
+                      "value": {
+                        "image": 'https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/4.png',
+                        "altText": "image"
+                      },
+                      "type": "UnchainedCtrlImageBlock",
+                      "parent_id": "2269d66f-b21b-4425-949c-26cdc31d1e3f",
+                      "id": "1d016030-d394-48ed-928b-ab942603dc2c"
+                    },
+                    {
+                      "value": {
+                        "text": "Consumer Discretionary"
+                      },
+                      "type": "UnchainedCtrlCharBlock",
+                      "parent_id": "2269d66f-b21b-4425-949c-26cdc31d1e3f",
+                      "id": "99c9150c-6ed7-4231-ba19-e81ba163540b"
+                    }
+                  ]
+                },
+                "type": "GICIcon",
+                "parent_id": "8a23ace1-7734-4113-8d70-5e87118396a5",
+                "id": "2269d66f-b21b-4425-949c-26cdc31d1e3f"
+              }
+            ]
+          },
+          "type": "GICSection",
+          "id": "8a23ace1-7734-4113-8d70-5e87118396a5"
         }
       ],
+      "id": 4
     },
     {
       "meta": {
