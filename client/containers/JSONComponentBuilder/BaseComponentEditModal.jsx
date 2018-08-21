@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 
 import ReactQuill from 'react-quill';
-import { Modal, Container, Input, Button, Image, Grid, Label, Icon } from 'unchained-ui-react';
+import { Modal, Container, Input, Button, Image, Grid, Label, Icon, Checkbox } from 'unchained-ui-react';
 
 import { FILE_TYPES } from 'constants/defaults';
 
@@ -63,6 +63,14 @@ class BaseComponentEditModal extends Component {
           <Input
             type="text"
             value={setting.value.text}
+            onChange={(el) => this.updateSettingsObj(el.target.value, setting, 'text')}
+          />
+        );
+      case 'UnchainedCtrlBooleanBlock':
+        return (
+          <Checkbox 
+            label={setting.value.label}
+            value={setting.value.radio}
             onChange={(el) => this.updateSettingsObj(el.target.value, setting, 'text')}
           />
         );

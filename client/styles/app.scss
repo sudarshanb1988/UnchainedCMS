@@ -14,10 +14,11 @@
 .unchainedEditableEl {
   position: relative;
   display: inline;
-  text-align: right;
+  // text-align: right;
+  width: 100%;
   
   .unchainedEditableBtn {
-    text-align: right;
+    // text-align: right;
     display: inline;
     position: absolute;
     z-index: 300;
