@@ -83,7 +83,7 @@ class LollypopCasouselItem extends Component {
             <div className="centerAlignVertical">
               <RichText richText={richText} />
               {
-                to.url && (
+                to && to.url && (
                   (to.link_target !== 'newTab') ?
                     this.renderInternalLink(to.url, learMoreText, isPlayIcon)
                     :
