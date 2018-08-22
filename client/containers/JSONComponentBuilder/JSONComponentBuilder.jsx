@@ -73,7 +73,7 @@ class JSONComponentBuilder extends Component {
     return (a.length === arr.length);
   }
 
-  buildChildComponents(jsonObj, isEditable) {
+  buildChildComponents(jsonObj, isEditable, isCreateNew) {
     if (!jsonObj || jsonObj.length === 0 || this.isUnchainedCtrl(jsonObj)) {
       return null;
     }
@@ -97,7 +97,12 @@ class JSONComponentBuilder extends Component {
             });
           }}
         >
-          <ContainerEditor componentData={jsonObj} jsonObj={this.state.jsonObj} updateJsonData={this.updateJsonData}>
+          <ContainerEditor
+            isCreateNew={isCreateNew}
+            componentData={jsonObj}
+            jsonObj={this.state.jsonObj}
+            updateJsonData={this.updateJsonData}
+          >
             {this.developComponents(jsonObj)}
           </ContainerEditor>
         </DragAndDrop>
@@ -117,7 +122,7 @@ class JSONComponentBuilder extends Component {
       const Element = components[componentName];
 
       if (Element) {
-        const children = this.buildChildComponents(item.value.children, item.isEditable);
+        const children = this.buildChildComponents(item.value.children, item.isEditable, item.isCreateNew);
         const props = JSON.parse(JSON.stringify(item.value.children));
         delete props.children;
 

@@ -94,7 +94,7 @@ class BaseComponentEditModal extends Component {
             </Grid.Column>
             <Grid.Column computer={9}>
               <div>
-                <Label ribbon={true}>Alt Text</Label>
+                <Label ribbon>Alt Text</Label>
                 <Input
                   type="text"
                   value={setting.value.altText}

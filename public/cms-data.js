@@ -17,6 +17,9 @@ window.unchainedSite = {
       "body": [
         {
           "value": {
+            "className": {
+              "text": "className for main carousel"
+            },
             "children": [
               {
                 "value":{
@@ -68,10 +71,13 @@ window.unchainedSite = {
                 "type": "LollypopCarouselItem",
                 "id": "LollypopCasouselItem_Id",
                 "parent_id": "LollypopCarousel_Id",
-                "isEditable": true
+                "isEditable": true,
+                "isCreateNew": true,
               }
             ]
           },
+          "isCreateNew": true,
+          "isEditable": true,
           "carouselType": "main-page-carousel",
           "type": "LollypopCarousel",
           "id": "LollypopCarousel_Id"
@@ -305,7 +311,8 @@ window.unchainedSite = {
               }
             ]
           },
-          isEditable: true,
+          "isEditable": true,
+          "isCreateNew": true,
           "type": "FeaturedResearch",
           "id": "466130e3-99e2-447e-bf72-dab678fbdfe2"
         },

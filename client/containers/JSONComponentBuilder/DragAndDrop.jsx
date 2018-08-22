@@ -10,8 +10,11 @@ class DragAndDrop extends React.Component { // eslint-disable-line
   }
   render() {
     const { connectDragSource, connectDropTarget, children, isOver, isDragging } = this.props; // eslint-disable-line
+    // const styles = {
+    //   width: '100%',
+    // };
     return (
-      <div>
+      <div className="drag-and-drop">
         {
           connectDragSource(connectDropTarget(
             <div
