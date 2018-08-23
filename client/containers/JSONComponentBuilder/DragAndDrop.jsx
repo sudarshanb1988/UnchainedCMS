@@ -10,8 +10,11 @@ class DragAndDrop extends React.Component { // eslint-disable-line
   }
   render() {
     const { connectDragSource, connectDropTarget, children, isOver, isDragging } = this.props; // eslint-disable-line
+    // const styles = {
+    //   width: '100%',
+    // };
     return (
-      <div>
+      <div className="drag-and-drop">
         {
           connectDragSource(connectDropTarget(
             <div
@@ -62,12 +65,14 @@ const DragAndDropComponent = flow(
   DropTarget(
     'DragAndDrop',
     {
-      drop(targetProps) {
+      drop(targetProps, monitor) {
+        const prevProps = monitor.getItem();
+        targetProps.onDropComponent(prevProps.data);
         return targetProps;
       },
-      hover(props, monitor) {
-        const prevProps = monitor.getItem();
-        props.onDropComponent(prevProps.data);
+      hover(props) {
+        // const prevProps = monitor.getItem();
+        // props.onDropComponent(prevProps.data);
         return {
           ...props,
           isHover: true,

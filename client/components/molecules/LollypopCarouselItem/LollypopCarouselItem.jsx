@@ -75,7 +75,16 @@ class LollypopCasouselItem extends Component {
 
 
   render() {
-    const { richText, learMoreText, to, backgroundImage, lollopopColor, isPlayIcon } = this.props;
+    const { data } = this.props;
+    const { image: backgroundImage } = data[0].value;
+    const { richText } = data[1].value;
+    const { text: learMoreText } = data[2].value;
+    const { checkbox: isPlayIcon } = data[3].value;
+    const { text: lollopopColor } = data[4].value;
+    const to = {
+      url: "http://google.com",
+      target:  "http://google.com",
+    };
     return (
       <div className={'lollypop-casousel-item sub-page'}>
         <div className="banner" style={{ background: `url(${backgroundImage})` }}>
@@ -83,7 +92,7 @@ class LollypopCasouselItem extends Component {
             <div className="centerAlignVertical">
               <RichText richText={richText} />
               {
-                to.url && (
+                to && to.url && (
                   (to.link_target !== 'newTab') ?
                     this.renderInternalLink(to.url, learMoreText, isPlayIcon)
                     :
