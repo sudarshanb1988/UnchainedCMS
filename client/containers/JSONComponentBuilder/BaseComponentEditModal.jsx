@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { isEqual } from 'lodash';
-import { Modal, Container, Input, Button, Image, Grid, Label, Icon } from 'unchained-ui-react';
-import ReactQuill from 'react-quill';
 
-import ImagePickerModal from './ImagePickerModal';
+
+import ReactQuill from 'react-quill';
+import { Modal, Container, Input, Button, Image, Grid, Label, Icon, Checkbox } from 'unchained-ui-react';
+
+import { FILE_TYPES } from 'constants/defaults';
+
+import FilePickerModal from './FilePickerModal';
 
 import './BaseComponentEditModal.scss';
 
@@ -34,47 +37,58 @@ class BaseComponentEditModal extends Component {
     this.props.cancelCB(data);
   }
 
-  updateSettingsObj = (value, setting, type) => {
+  updateSettingsObj = (value, key, updatekey) => {
     const { settings } = this.state;
-    settings.map(s => {
-      if (s.id === setting.id) {
-        s.value[type] = value; // eslint-disable-line
+    const updateObject = {
+      ...settings,
+      [key]: {
+        ...(settings[key]),
+        [updatekey]: value
       }
-    });
-    this.setState({ settings });
+    };
+    this.setState({ settings: updateObject });
   }
 
   setSize = (size) => this.setState({ size });
 
-  getControlType(setting) {
+  getControlType(setting, key) {
     switch (setting.type) {
-      case 'UnchainedCtrlRichTextBlock':
+      case 'richText':
         return (
           <ReactQuill
-            value={setting.value.richText}
-            onChange={(value) => this.updateSettingsObj(value, setting, 'richText')}
+            value={setting.richText}
+            onChange={(value) => this.updateSettingsObj(value, key, 'richText')}
           />
         );
-      case 'UnchainedCtrlCharBlock':
+      case 'text':
         return (
           <Input
             type="text"
-            value={setting.value.text}
-            onChange={(el) => this.updateSettingsObj(el.target.value, setting, 'text')}
+            value={setting.text}
+            onChange={(el) => this.updateSettingsObj(el.target.value, key, 'text')}
           />
         );
-      case 'UnchainedCtrlImageBlock':
+      case 'UnchainedCtrlBooleanBlock':
+        return (
+          <Checkbox
+            label={setting.label}
+            value={setting.radio}
+            onChange={(el) => this.updateSettingsObj(el.target.value, key, 'text')}
+          />
+        );
+      case 'image':
         return (
           <Grid>
             <Grid.Column computer={3}>
               <Image
-                src={setting.value.image}
+                src={setting.url}
               />
               <Button
                 className="editBtn"
                 onClick={() => {
                   this.setState({
                     imagePickerData: setting,
+                    imagePickerDataKey: key
                   });
                 }}
               >
@@ -83,11 +97,11 @@ class BaseComponentEditModal extends Component {
             </Grid.Column>
             <Grid.Column computer={9}>
               <div>
-                <Label ribbon={true}>Alt Text</Label>
+                <Label ribbon>Alt Text</Label>
                 <Input
                   type="text"
-                  value={setting.value.altText}
-                  onChange={(el) => this.updateSettingsObj(el.target.value, setting, 'altText')}
+                  value={setting.altText}
+                  onChange={(el) => this.updateSettingsObj(el.target.value, key, 'altText')}
                 />
               </div>
             </Grid.Column>
@@ -98,8 +112,10 @@ class BaseComponentEditModal extends Component {
     return null;
   }
 
+  blackListProps = ['class_name'];
+
   render() {
-    const { settings, size, imagePickerData, editableDataPoints } = this.state;
+    const { settings, size, imagePickerData, editableDataPoints, imagePickerDataKey } = this.state;
     return (
       <Modal
         open
@@ -134,24 +150,26 @@ class BaseComponentEditModal extends Component {
         <Modal.Content>
           <Container>
             {
-              settings && settings.map((setting, i) => {
+              settings && Object.keys(settings).map((setting, i) => {
+                if (this.blackListProps.indexOf(setting) > -1) return null;
                 return (
                   <div className="setting-control" key={`setting-${i + 1}`}>
-                    {this.getControlType(setting)}
+                    {this.getControlType(settings[setting], setting)}
                   </div>
                 );
               })
             }
             {
               imagePickerData &&
-                <ImagePickerModal
-                  updateImage={(data) => {
-                    const imageLocation = settings.indexOf(imagePickerData);
-                    const newSettings = [...settings];
-                    newSettings[imageLocation].value.image = data;
+                <FilePickerModal
+                  fileType={FILE_TYPES.IMAGES}
+                  updateImage={(imageUrl) => {
+                    const newSettings = { ...settings };
+                    newSettings[imagePickerDataKey].url = imageUrl;
                     this.setState({
                       settings: newSettings,
                       imagePickerData: null,
+                      imagePickerDataKey: null
                     });
                   }}
                   handleModal={(imagePickerData) => {

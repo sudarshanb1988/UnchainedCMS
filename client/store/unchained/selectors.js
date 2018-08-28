@@ -1,5 +1,7 @@
 export const initialState = {
-  unchainedTokenValid: false
+  unchainedAppData: {},
+  isPageDataLoading: false
 };
 
-export const isUnchainedTokenValid = (state = initialState) => state.unchainedTokenValid;
+export const getUnchainedAppData = (state = initialState) => state.unchainedAppData;
+export const isPageDataLoading = (state = initialState) => state.isPageDataLoading;

@@ -63,13 +63,6 @@ module.exports = webpackMerge(commonConfig, {
         fallback: 'style-loader',
         use: ['css-loader?sourceMap=true', 'resolve-url-loader', 'sass-loader?sourceMap=true&precision=8'],
       }),
-    },
-    {
-      test: /\.less$/,
-      loader: 'less-loader', // compiles Less to CSS
-      options: {
-        sourceMap: true
-      }
     }
   ]
   },

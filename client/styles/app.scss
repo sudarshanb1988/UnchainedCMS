@@ -14,10 +14,11 @@
 .unchainedEditableEl {
   position: relative;
   display: inline;
-  text-align: right;
+  // text-align: right;
+  width: 100%;
   
   .unchainedEditableBtn {
-    text-align: right;
+    // text-align: right;
     display: inline;
     position: absolute;
     z-index: 300;
@@ -30,6 +31,12 @@
     background: transparent;
     border: none;
     outline: none;
+  }
+  .edit-component{
+    border: 1px dashed transparent;
+    &:hover {
+     border-color:green;
+    }
   }
 }
 .unchainedEditableElSettingsPopup {
@@ -263,4 +270,7 @@ body.noscroll-thank {
     z-index: 100;
     border-radius: 0;
   }
+}
+.text-right{
+  text-align: right;
 }

@@ -1,15 +1,21 @@
 import { initialState } from './selectors';
 
 import {
-  USER_AUTH_UNCHAINED_TOKEN_VALID,
+  UNCHAINED_APP_DATA,
+  IS_UNCHAINED_APP_DATA_LOADING
 } from './actions';
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case USER_AUTH_UNCHAINED_TOKEN_VALID:
+    case UNCHAINED_APP_DATA:
       return {
         ...state,
-        unchainedTokenValid: action.data
+        unchainedAppData: action.data
+      };
+    case IS_UNCHAINED_APP_DATA_LOADING:
+      return {
+        ...state,
+        isPageDataLoading: action.data
       };
     default:
       return state;

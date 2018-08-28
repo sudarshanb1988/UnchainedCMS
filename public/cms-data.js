@@ -18,6 +18,73 @@ window.unchainedSite = {
         {
           "value": {
             "className": {
+              "text": "className for main carousel"
+            },
+            "children": [
+              {
+                "value":{
+                  "children": [
+                    {
+                      "value": {
+                        "image": "https://bmo-capital-markets-osqa-ui-equity.galepartners.com//media/original_images/Homepage_Carousel_Background.png",
+                        "altText": "Homepage Carousel Background"
+                      },
+                      "type": "UnchainedCtrlImageBlock",
+                      "id": "backgroundImage_id",
+                      "parent_id": "LollypopCasouselItem_Id"
+                    },
+                    {
+                      "value": {
+                        "richText": "<div class=\"rich-text\"><h1>Check out our new <b>Enhanced Search</b></h1><p>Get to what you need faster and easier than ever before.</p></div>",
+                      },
+                      "type": "UnchainedCtrlRichTextBlock",
+                      "id": "richText_id",
+                      "parent_id": "LollypopCasouselItem_Id"
+                    },
+                    {
+                      "value": {
+                        "text": "Learn More",
+                      },
+                      "type": "UnchainedCtrlCharBlock",
+                      "id": "learMoreText_id",
+                      "parent_id": "LollypopCasouselItem_Id"
+                    },
+                    {
+                      value: {
+                        "checkbox": false,
+                        "label": "Show Play Icon"
+                      },
+                      "type": "UnchainedCtrlBooleanBlock",
+                      "id": "isPlayIcon_id",
+                      "parent_id": "LollypopCasouselItem_Id"
+                    },
+                    {
+                      value: {
+                        "text": "#ed1c24"
+                      },
+                      "type": "UnchainedCtrlCharBlock",
+                      "id": "lollopopColor_id",
+                      "parent_id": "LollypopCasouselItem_Id"
+                    },
+                  ],
+                },
+                "type": "LollypopCarouselItem",
+                "id": "LollypopCasouselItem_Id",
+                "parent_id": "LollypopCarousel_Id",
+                "isEditable": true,
+                "isCreateNew": true,
+              }
+            ]
+          },
+          "isCreateNew": true,
+          "isEditable": true,
+          "carouselType": "main-page-carousel",
+          "type": "LollypopCarousel",
+          "id": "LollypopCarousel_Id"
+        },
+        {
+          "value": {
+            "className": {
               "text": "className for main featured Research"
             },
             "children": [
@@ -244,6 +311,8 @@ window.unchainedSite = {
               }
             ]
           },
+          "isEditable": true,
+          "isCreateNew": true,
           "type": "FeaturedResearch",
           "id": "466130e3-99e2-447e-bf72-dab678fbdfe2"
         },

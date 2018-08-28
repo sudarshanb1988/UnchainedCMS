@@ -1,41 +1,94 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
 
 import {
-  JSONComponentBuilder,
-} from 'containers';
+  unchainedSelector,
+} from 'store/selectors';
 
-const PageBuilder = (props) => {
-  const {
-    pathname: slug,
-  } = props.location;
+import {
+  GET_UNCHAINED_APP_DATA
+} from 'store/actions';
 
-  let jsonObj = {};
+import { getParameterByName } from 'utils';
+import components from 'components';
 
-  const previewElement = document.getElementById('unchained');
+import JSONComponentBuilder from '../JSONComponentBuilder/JSONComponentBuilder';
 
-  if (previewElement) {
-    jsonObj = JSON.parse(previewElement.getAttribute('data'));
-  } else if (window.unchainedSite && window.unchainedSite.data.find(d => d.meta.slug === slug)) {
-    jsonObj = window.unchainedSite.data.find(d => d.meta.slug === slug);
-    // if (slug === '/en') {
-    //   jsonObj = allPagesData['/en/'];
-    // }
 
-    if (jsonObj.length === 0) {
-      jsonObj = window.unchainedSite.find(d => d.meta.slug === '/404/');
+class PageBuilder extends Component {
+  static propTypes = {
+    jsonObj: PropTypes.object,
+    getAppData: PropTypes.func,
+    isPageDataLoading: PropTypes.bool,
+    location: {
+      pathname: PropTypes.string
+    }
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      jsonObj: null,
+    };
+  }
+
+  componentWillReceiveProps(nextProps, props) {
+    if (!isEqual(nextProps.jsonObj, props.jsonObj)) {
+      this.setState({
+        jsonObj: nextProps.jsonObj,
+      });
     }
   }
 
-  const components = require('components');
+  componentWillMount() {
+    const {
+      pathname: slug,
+    } = this.props.location;
 
-  return <JSONComponentBuilder components={components} jsonObj={jsonObj} />;
-};
+    let jsonObj = {};
 
-PageBuilder.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string,
-  }),
-};
+    const previewElement = document.getElementById('unchained');
 
-export default PageBuilder;
+    if (previewElement) {
+      jsonObj = JSON.parse(previewElement.getAttribute('data'));
+    } else if (window.unchainedSite && window.unchainedSite.data.find(d => d.meta.slug === slug)) {
+      jsonObj = window.unchainedSite.data.find(d => d.meta.slug === slug);
+      // if (slug === '/en') {
+      //   jsonObj = allPagesData['/en/'];
+      // }
+
+      if (jsonObj.length === 0) {
+        jsonObj = window.unchainedSite.find(d => d.meta.slug === '/404/');
+      }
+    } else {
+      const token = getParameterByName('token');
+      const page = getParameterByName('page');
+      this.props.getAppData(page, token);
+    }
+    this.setState({ jsonObj });
+  }
+
+  render() {
+    const { isPageDataLoading } = this.props;
+    const { jsonObj } = this.state;
+
+    return <JSONComponentBuilder isPageDataLoading={isPageDataLoading} components={components} jsonObj={jsonObj} />;
+  }
+}
+
+
+const mapStateToProps = (state) => ({
+  jsonObj: unchainedSelector.getUnchainedAppData(state),
+  isPageDataLoading: unchainedSelector.isPageDataLoading(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getAppData: (page, token) => {
+    dispatch(GET_UNCHAINED_APP_DATA(page, token));
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PageBuilder);

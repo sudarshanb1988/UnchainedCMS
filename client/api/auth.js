@@ -38,8 +38,8 @@ export async function verifyloginAPI() {
   return post(`${apiUrl}/user/verify/`, {});
 }
 
-export async function verifyUnchainedTokenAPI(token) {
-  return get(`${apiUrl}/user/create/${token}/`);
+export async function getUnchainedAppData(page) {
+  return get(`${apiUrl}/unchained/build/get-json/${page}/`);
 }
 
 /*
@@ -66,4 +66,8 @@ export async function uploadImage(data) {
 
 export async function getImages() {
   return get(`${dataAPIUrl}/images`);
+}
+
+export async function errorLogger(data) {
+  return post(`${apiUrl}/log`, data);
 }

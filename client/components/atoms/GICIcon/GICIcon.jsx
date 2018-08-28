@@ -43,9 +43,9 @@ class GICIcon extends Component {
 
   render() {
     const { data } = this.props;
-    const altText = data[0].value.altText;
-    const image = data[0].value.image;
-    const text = data[1].value.text;
+    const altText = data.image.altText;
+    const image = data.image.url;
+    const { text } = data.text;
     const to = {};
 
     // URL format

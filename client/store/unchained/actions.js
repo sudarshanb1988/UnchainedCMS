@@ -3,20 +3,31 @@ import {
 } from 'api/utils';
 
 import {
-  verifyUnchainedTokenAPI,
+  getUnchainedAppData,
+  setLocalToken,
+  removeLocalToken
 } from 'api/auth';
 
-export const USER_AUTH_UNCHAINED_TOKEN_VALID = 'USER_AUTH_UNCHAINED_TOKEN_VALID';
+// import {
+//   removeQueryParams
+// } from 'utils';
 
-export function USER_AUTH_VERIFY_UNCHAINED_TOKEN(token) {
+export const UNCHAINED_APP_DATA = 'UNCHAINED_APP_DATA';
+export const IS_UNCHAINED_APP_DATA_LOADING = 'IS_UNCHAINED_APP_DATA_LOADING';
+
+export function GET_UNCHAINED_APP_DATA(page, token) {
   return async (dispatch) => {
-    const result = await verifyUnchainedTokenAPI(token);
-
+    setLocalToken(token);
+    dispatch({ type: IS_UNCHAINED_APP_DATA_LOADING, data: true });
+    const result = await getUnchainedAppData(page);
+    dispatch({ type: IS_UNCHAINED_APP_DATA_LOADING, data: false });
     if (resultOK(result)) {
-      dispatch({ type: USER_AUTH_UNCHAINED_TOKEN_VALID, data: true });
-      // return null;
+      dispatch({ type: UNCHAINED_APP_DATA, data: result.data.data });
+      // removeQueryParams();
+      return null;
     }
-    dispatch({ type: USER_AUTH_UNCHAINED_TOKEN_VALID, data: false });
-    // return null;
+    dispatch({ type: UNCHAINED_APP_DATA, data: null });
+    removeLocalToken();
+    return null;
   };
 }

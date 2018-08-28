@@ -37,7 +37,7 @@ class ComponentEditor extends React.Component {
     if (Array.isArray(data)) {
       data.map(item => {
         if (item.id === nodeId) {
-          item.value.children = changedData; // eslint-disable-line
+          item.value = changedData; // eslint-disable-line
         }
         return this.updateNode(item.value.children, nodeId, changedData);
       });
@@ -45,9 +45,9 @@ class ComponentEditor extends React.Component {
   }
 
   updateCMDData = async (data) => {
-    const { jsonObj, updateJsonData } = this.props;
+    const { jsonObj, updateJsonData, parentId } = this.props;
     if (data) {
-      this.updateNode(jsonObj.body, data[0].parent_id, data);
+      this.updateNode(jsonObj.body, parentId, data);
     }
     // await updateCMDData(
     //   jsonObj.id,

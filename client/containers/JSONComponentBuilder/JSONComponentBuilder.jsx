@@ -2,31 +2,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { isEqual } from 'lodash';
-import { connect } from 'react-redux';
 import {
   Message,
 } from 'unchained-ui-react';
 
-import {
-  unchainedSelector,
-} from 'store/selectors';
-
-import {
-  USER_AUTH_VERIFY_UNCHAINED_TOKEN
-} from 'store/actions';
-
-import { getParameterByName } from 'utils';
-
 import ContainerEditor from './ContainerEditor';
 import ComponentEditor from './ComponentEditor';
+import DragAndDrop from './DragAndDrop';
 
 
 class JSONComponentBuilder extends Component {
   static propTypes = {
     components: PropTypes.object,
     jsonObj: PropTypes.object,
-    isAuthorized: PropTypes.bool,
-    verifyUnchainedToken: PropTypes.func
+    isPageDataLoading: PropTypes.bool
   };
 
   constructor(props) {
@@ -41,11 +30,15 @@ class JSONComponentBuilder extends Component {
   unchainedControlPrefix = 'UnchainedCtrl';
 
   componentWillReceiveProps(nextProps, props) {
-    if (isEqual(nextProps.jsonObj, props.jsonObj)) {
+    if (!isEqual(nextProps.jsonObj, props.jsonObj)) {
       this.setState({
         jsonObj: nextProps.jsonObj,
       });
     }
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log(this, error, errorInfo); // eslint-disable-line
   }
 
   buildSEOComponents = (seoObj = {}) => {
@@ -82,15 +75,39 @@ class JSONComponentBuilder extends Component {
     return (a.length === arr.length);
   }
 
-  buildChildComponents(jsonObj, isEditable) {
+  buildChildComponents(jsonObj, isEditable, isCreateNew) {
     if (!jsonObj || jsonObj.length === 0 || this.isUnchainedCtrl(jsonObj)) {
       return null;
     }
     if (isEditable) {
       return (
-        <ContainerEditor componentData={jsonObj} jsonObj={this.state.jsonObj} updateJsonData={this.updateJsonData}>
-          {this.developComponents(jsonObj)}
-        </ContainerEditor>
+        <DragAndDrop
+          data={jsonObj}
+          onDrag={(isDragging) => { this.setState({ isDragging }); }}
+          onDropComponent={(data) => {
+            const cmsData = this.state.jsonObj.body;
+            const newComponetData = [...cmsData];
+            const totalData = cmsData.find((ele) => data[0].parent_id === ele.id);
+            const totalEleData = cmsData.find((ele) => jsonObj[0].parent_id === ele.id);
+            const dataLocation = cmsData.indexOf(totalData);
+            const eleLocation = cmsData.indexOf(totalEleData);
+            newComponetData[dataLocation] = totalEleData;
+            newComponetData[eleLocation] = totalData;
+            this.updateJsonData({
+              ...this.state.jsonObj,
+              body: [...newComponetData],
+            });
+          }}
+        >
+          <ContainerEditor
+            isCreateNew={isCreateNew}
+            componentData={jsonObj}
+            jsonObj={this.state.jsonObj}
+            updateJsonData={this.updateJsonData}
+          >
+            {this.developComponents(jsonObj)}
+          </ContainerEditor>
+        </DragAndDrop>
       );
     }
     return this.developComponents(jsonObj);
@@ -99,7 +116,6 @@ class JSONComponentBuilder extends Component {
   developComponents(jsonObj) {
     const {
       components,
-      isAuthorized
     } = this.props;
 
     return jsonObj.map((item) => {
@@ -108,17 +124,22 @@ class JSONComponentBuilder extends Component {
       const Element = components[componentName];
 
       if (Element) {
-        const isElementEditable = isAuthorized && item.isEditable;
-        const children = this.buildChildComponents(item.value.children, isElementEditable);
-        const props = JSON.parse(JSON.stringify(item.value.children));
-        delete props.children;
+        const isElementEditable = item.isEditable;
+        const children = this.buildChildComponents(item.value.children, isElementEditable, item.isCreateNew);
+        const props = JSON.parse(JSON.stringify(item.value));
+        // delete props.children;
 
         if (props.wrapperComponent === true) {
           return children;
         }
         if (isElementEditable) {
           return (
-            <ComponentEditor componentData={props} jsonObj={this.state.jsonObj} updateJsonData={this.updateJsonData}>
+            <ComponentEditor
+              componentData={props}
+              jsonObj={this.state.jsonObj}
+              updateJsonData={this.updateJsonData}
+              parentId={item.id}
+            >
               <Element data={props}>{children}</Element>
             </ComponentEditor>
           );
@@ -142,17 +163,29 @@ class JSONComponentBuilder extends Component {
 
   updateJsonData = (jsonData) => this.setState({ jsonObj: jsonData })
 
-  componentDidMount() {
-    const token = getParameterByName('token');
-    if (token) {
-      this.props.verifyUnchainedToken(token);
-    }
-  }
-
   render() {
     const {
       jsonObj,
     } = this.state;
+    const { isPageDataLoading } = this.props;
+    if (jsonObj === null || Object.keys(jsonObj).length === 0) {
+      if (isPageDataLoading === true) {
+        return (
+          <div id="docs-loading-dimmer" className="ui active page dimmer">
+            <div className="content">
+              <div className="center">
+                <div className="ui large text loader">
+                  <div className="ui inverted blue heading">
+                    Loading App Data...
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+      return <div>Something went wrong while loading your application!</div>;
+    }
     return (
       <div>
         <Helmet>
@@ -164,14 +197,4 @@ class JSONComponentBuilder extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  isAuthorized: unchainedSelector.isUnchainedTokenValid(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  verifyUnchainedToken: (token) => {
-    dispatch(USER_AUTH_VERIFY_UNCHAINED_TOKEN(token));
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(JSONComponentBuilder);
+export default JSONComponentBuilder;

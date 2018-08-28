@@ -79,7 +79,7 @@ class LollypopCarousel extends Component {
           <Segment className={'carousel-segment-homepage'}>
             <Container className={`${this.props.carouselType}`}>
               <Slick {...settings}>
-                { children.map(item => <div key={Math.random()}>{item}</div>)}
+                {children}
               </Slick>
             </Container>
           </Segment>

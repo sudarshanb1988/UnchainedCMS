@@ -11,7 +11,6 @@ const config = {
     vendor: [
       'babel-polyfill',
       'react',
-      'react-addons-perf',
       'react-date-picker',
       'react-dom',
       'react-helmet',

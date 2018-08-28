@@ -39,7 +39,7 @@ class GICSection extends Component {
   }
   render() {
     const { children, data } = this.props;
-    const richText = data[0].value.richText;
+    const richText = data.value ? data.value.richText : null;
     const to = {};
     const buttonText = '';
 

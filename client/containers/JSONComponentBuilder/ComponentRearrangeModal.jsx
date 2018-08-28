@@ -70,7 +70,7 @@ class ComponentRearrangeModal extends React.Component {
                           });
                         }}
                       >
-                        {i + 1} {ele.value.children[0].value.text}
+                        {i + 1} {ele.value.text.text}
                         <Button className="trash-icon" icon="trash" onClick={() => this.removeComponentDate(i)} />
                       </DragAndDropComponent>
                     </Grid.Column>
