@@ -51,7 +51,7 @@ class FeaturedResearchComponent extends Component {
 
   render() {
     const { data } = this.props;
-    const { sectionTitle, image, navImage, sectionDescription } = data;
+    const { sectionTitle, imageVal, navImage, sectionDescription } = data;
     const to = {};
 
     const markup = (
@@ -59,7 +59,7 @@ class FeaturedResearchComponent extends Component {
         <List className="list-wrap">
           <List.Item className="title section-title"><span>{this.getFormattedText(sectionTitle.text)}</span></List.Item>
           <List.Item className="component-image-holder">
-            <Image className="component-image" height={72} src={image.url} alt={image.altText} title={image.altText} />
+            <Image className="component-image" height={72} src={imageVal.url} alt={imageVal.altText} title={imageVal.altText} />
           </List.Item>
           <List.Item className="description"><RichText richText={sectionDescription.richText} /></List.Item>
           <Image className="link-imag" width={42} src={navImage.image} alt={`${navImage.altText} to ${sectionTitle.text}`} title={`${navImage.altText} to ${sectionTitle.text}`} />
